@@ -1,12 +1,13 @@
-package me.coley.jdds;
+package me.coley.jdds.core;
 
-import me.coley.jdds.datatype.JDuration;
-import me.coley.jdds.datatype.JModifiableTime;
-import me.coley.jdds.datatype.JTime;
+import me.coley.jdds.core.datatype.JDuration;
+import me.coley.jdds.core.datatype.JModifiableTime;
+import me.coley.jdds.core.datatype.JTime;
+import me.coley.jdds.core.handle.ImmutableInstanceHandleImpl;
+import me.coley.jdds.core.handle.InstanceHandleImpl;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.GuardCondition;
 import org.omg.dds.core.InstanceHandle;
-import org.omg.dds.core.ModifiableInstanceHandle;
 import org.omg.dds.core.ModifiableTime;
 import org.omg.dds.core.QosProvider;
 import org.omg.dds.core.ServiceEnvironment;
@@ -83,13 +84,13 @@ public class JServiceProvider implements ServiceEnvironment.ServiceProviderInter
 	}
 
 	@Override
-	public ModifiableInstanceHandle newInstanceHandle() {
-		return null;
+	public InstanceHandleImpl newInstanceHandle() {
+		return new InstanceHandleImpl(this);
 	}
 
 	@Override
 	public InstanceHandle nilHandle() {
-		return null;
+		return new ImmutableInstanceHandleImpl(this, null);
 	}
 
 	@Override
@@ -99,41 +100,49 @@ public class JServiceProvider implements ServiceEnvironment.ServiceProviderInter
 
 	@Override
 	public WaitSet newWaitSet() {
+		// TODO: WaitSet
 		return null;
 	}
 
 	@Override
 	public Set<Class<? extends Status>> allStatusKinds() {
+		// TODO: Status?
 		return null;
 	}
 
 	@Override
 	public Set<Class<? extends Status>> noStatusKinds() {
+		// TODO: Status?
 		return null;
 	}
 
 	@Override
 	public QosProvider newQosProvider(String uri, String profile) {
+		// TODO: QoS system?
 		return null;
 	}
 
 	@Override
 	public PolicyFactory getPolicyFactory() {
+		// TODO: PolicyFactory and all policy implementation classes
 		return null;
 	}
 
 	@Override
 	public DynamicDataFactory getDynamicDataFactory() {
+		// TODO: Dynamic data factory
 		return null;
 	}
 
 	@Override
 	public KeyedString newKeyedString() {
+		// TODO: KString
 		return null;
 	}
 
 	@Override
 	public KeyedBytes newKeyedBytes() {
+		// TODO: KBytes
 		return null;
 	}
 

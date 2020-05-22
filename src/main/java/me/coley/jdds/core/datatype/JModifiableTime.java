@@ -1,6 +1,6 @@
-package me.coley.jdds.datatype;
+package me.coley.jdds.core.datatype;
 
-import me.coley.jdds.JServiceEnvironment;
+import me.coley.jdds.core.JServiceEnvironment;
 import me.coley.jdds.util.TimeUtil;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.ModifiableTime;

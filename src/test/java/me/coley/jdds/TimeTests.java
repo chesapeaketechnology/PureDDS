@@ -1,7 +1,9 @@
 package me.coley.jdds;
 
-import me.coley.jdds.datatype.JModifiableTime;
+import me.coley.jdds.core.JServiceEnvironment;
+import me.coley.jdds.core.datatype.JModifiableTime;
 import org.junit.jupiter.api.Test;
+import org.omg.dds.core.Duration;
 import org.omg.dds.core.ModifiableTime;
 import org.omg.dds.core.Time;
 
@@ -11,7 +13,15 @@ import java.util.function.Consumer;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TimeTests {
-	private final JServiceEnvironment environment = new JServiceEnvironment();
+	private static final JServiceEnvironment environment = new JServiceEnvironment();
+
+	@Test
+	public void testSpecialDurations() {
+		assertTrue(environment.getSPI().infiniteDuration().isInfinite());
+		assertFalse(environment.getSPI().infiniteDuration().isZero());
+		assertFalse(environment.getSPI().zeroDuration().isInfinite());
+		assertTrue(environment.getSPI().zeroDuration().isZero());
+	}
 
 	@Test
 	public void testInvalidTime() {
@@ -57,6 +67,23 @@ public class TimeTests {
 	}
 
 	@Test
+	public void testAddDuration() {
+		long base = 1;
+		long diff = 1;
+		long expectedDiffRatio = (base + diff) / base;
+		Duration duration = environment.getSPI().newDuration(base, TimeUnit.SECONDS);
+		// Add 0 seconds changes nothing
+		assertEquals(duration.getDuration(TimeUnit.NANOSECONDS),
+				duration.add(0, TimeUnit.SECONDS).getDuration(TimeUnit.NANOSECONDS));
+		// Add "diff" second changes by expected amount
+		assertEquals(duration.getDuration(TimeUnit.NANOSECONDS) * expectedDiffRatio,
+				duration.add(diff, TimeUnit.SECONDS).getDuration(TimeUnit.NANOSECONDS));
+		// Add "infinity" second changes to max value
+		assertEquals(Long.MAX_VALUE,
+				duration.add(Long.MAX_VALUE, TimeUnit.NANOSECONDS).getDuration(TimeUnit.NANOSECONDS));
+	}
+
+	@Test
 	public void testSubTime() {
 		long base = 10;
 		long diff = 5;
@@ -74,6 +101,22 @@ public class TimeTests {
 		// Subtract "infinity" throws exception
 		assertThrows(IllegalArgumentException.class,
 				() -> copy(time, t -> t.subtract(Long.MAX_VALUE, TimeUnit.NANOSECONDS)));
+	}
+
+	@Test
+	public void testSubDuration() {
+		long base = 10;
+		long diff = 5;
+		long expectedDiffRatio = base / (base - diff);
+		Duration duration = environment.getSPI().newDuration(base, TimeUnit.SECONDS);
+		// Subtract 0 seconds changes nothing
+		assertEquals(duration.getDuration(TimeUnit.NANOSECONDS),
+				duration.subtract(0, TimeUnit.SECONDS).getDuration(TimeUnit.NANOSECONDS));
+		// Subtract "diff" second changes by expected amount
+		assertEquals(duration.getDuration(TimeUnit.NANOSECONDS) / expectedDiffRatio,
+				duration.subtract(diff, TimeUnit.SECONDS).getDuration(TimeUnit.NANOSECONDS));
+		// Subtract value >= base yields 0
+		assertTrue(duration.subtract(base + 1, TimeUnit.SECONDS).isZero());
 	}
 
 	private static ModifiableTime copy(Time source, Consumer<ModifiableTime> modifier) {

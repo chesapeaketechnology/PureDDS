@@ -1,6 +1,6 @@
-package me.coley.jdds.datatype;
+package me.coley.jdds.core.datatype;
 
-import me.coley.jdds.JServiceEnvironment;
+import me.coley.jdds.core.JServiceEnvironment;
 import me.coley.jdds.util.TimeUtil;
 import org.omg.dds.core.Duration;
 
@@ -97,14 +97,13 @@ public class JDuration extends Duration {
 		if (isInfinite() || duration.isZero()) {
 			return new JDuration(getEnvironment(), nanoDuration);
 		}
-		// Check if we should return min value
-		if (duration.isInfinite()) {
-			return new JDuration(getEnvironment(), -Long.MAX_VALUE);
+		// Out of bounds
+		if (duration.getDuration(TimeUnit.NANOSECONDS) > nanoDuration) {
+			return new JDuration(getEnvironment(), 0);
 		}
 		return new JDuration(getEnvironment(),
 				TimeUtil.subtract(nanoDuration, duration.getDuration(TimeUnit.NANOSECONDS)));
 	}
-
 
 	@Override
 	public JServiceEnvironment getEnvironment() {

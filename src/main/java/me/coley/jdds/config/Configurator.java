@@ -1,5 +1,6 @@
 package me.coley.jdds.config;
 
+import org.omg.dds.domain.DomainParticipantFactoryQos;
 import org.omg.dds.domain.DomainParticipantQos;
 
 /**
@@ -10,6 +11,7 @@ import org.omg.dds.domain.DomainParticipantQos;
 public class Configurator {
 	private int defaultDomain;
 	private DomainParticipantQos defaultDomainParticipantQos;
+	private DomainParticipantFactoryQos defaultDomainParticipantFactoryQos;
 
 	/**
 	 * @return Default domain.
@@ -39,5 +41,20 @@ public class Configurator {
 	 */
 	public void setDefaultDomainParticipantQos(DomainParticipantQos defaultDomainParticipantQos) {
 		this.defaultDomainParticipantQos = defaultDomainParticipantQos;
+	}
+
+	/**
+	 * @return Default quality of service to apply to domain participant factories.
+	 */
+	public DomainParticipantFactoryQos getDefaultDomainParticipantFactoryQos() {
+		return defaultDomainParticipantFactoryQos;
+	}
+
+	/**
+	 * @param defaultDomainParticipantFactoryQos
+	 * 		Default quality of service to apply to domain participant factories.
+	 */
+	public void setDefaultDomainParticipantFactoryQos(DomainParticipantFactoryQos defaultDomainParticipantFactoryQos) {
+		this.defaultDomainParticipantFactoryQos = defaultDomainParticipantFactoryQos;
 	}
 }

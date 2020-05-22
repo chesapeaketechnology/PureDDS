@@ -1,4 +1,4 @@
-package me.coley.jdds;
+package me.coley.jdds.core;
 
 import me.coley.jdds.config.Configurator;
 import org.omg.dds.core.ServiceEnvironment;
