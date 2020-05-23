@@ -24,7 +24,8 @@ public class ReaderDataLifecycleImpl extends AbstractPolicy implements ReaderDat
 	 * @param autoPurgeDisposedSamplesDelay
 	 * 		Delay before purging disposed samples.
 	 */
-	public ReaderDataLifecycleImpl(ServiceEnvironment environment, Duration autoPurgeNoWriterSamplesDelay, Duration autoPurgeDisposedSamplesDelay) {
+	public ReaderDataLifecycleImpl(ServiceEnvironment environment, Duration autoPurgeNoWriterSamplesDelay,
+								   Duration autoPurgeDisposedSamplesDelay) {
 		super(environment);
 		this.autoPurgeNoWriterSamplesDelay = autoPurgeNoWriterSamplesDelay;
 		this.autoPurgeDisposedSamplesDelay = autoPurgeDisposedSamplesDelay;

@@ -39,7 +39,8 @@ public class DurabilityServiceImpl extends AbstractPolicy implements DurabilityS
 	 * 		Maxium number of samples to keep per single instance.
 	 */
 	public DurabilityServiceImpl(ServiceEnvironment environment, Duration serviceCleanupDelay,
-								 History.Kind historyKind, int historyDepth, int maxSamples, int maxInstances, int maxSamplesPerInstance) {
+								 History.Kind historyKind, int historyDepth, int maxSamples, int maxInstances,
+								 int maxSamplesPerInstance) {
 		super(environment);
 		this.serviceCleanupDelay = serviceCleanupDelay;
 		this.historyKind = historyKind;
@@ -59,9 +60,11 @@ public class DurabilityServiceImpl extends AbstractPolicy implements DurabilityS
 	 * @param resourceLimits
 	 * 		Resource limitation policy.
 	 */
-	public DurabilityServiceImpl(ServiceEnvironment environment, Duration serviceCleanupDelay, History history, ResourceLimits resourceLimits) {
+	public DurabilityServiceImpl(ServiceEnvironment environment, Duration serviceCleanupDelay, History history,
+								 ResourceLimits resourceLimits) {
 		this(environment, serviceCleanupDelay, history.getKind(), history.getDepth(),
-				resourceLimits.getMaxSamples(), resourceLimits.getMaxInstances(), resourceLimits.getMaxSamplesPerInstance());
+				resourceLimits.getMaxSamples(), resourceLimits.getMaxInstances(),
+				resourceLimits.getMaxSamplesPerInstance());
 	}
 
 	@Override

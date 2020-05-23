@@ -52,6 +52,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
+import static me.coley.jdds.util.MiscUtil.emptyBytes;
+
 /**
  * Policy factory implementation.
  *
@@ -64,6 +66,10 @@ public class JPolicyFactory extends PolicyFactory {
 	private static Duration defaultReliabilityDelay;
 	private final JServiceProvider spi;
 
+	/**
+	 * @param spi
+	 * 		Spawning provider that created the factory.
+	 */
 	public JPolicyFactory(JServiceProvider spi) {
 		this.spi = spi;
 		// TODO: Refactor these defaults into the configurator
@@ -102,7 +108,8 @@ public class JPolicyFactory extends PolicyFactory {
 
 	@Override
 	public ResourceLimits ResourceLimits() {
-		return new ResourceLimitsImpl(getEnvironment(), ResourceLimits.LENGTH_UNLIMITED, ResourceLimits.LENGTH_UNLIMITED, ResourceLimits.LENGTH_UNLIMITED);
+		return new ResourceLimitsImpl(getEnvironment(),
+				ResourceLimits.LENGTH_UNLIMITED, ResourceLimits.LENGTH_UNLIMITED, ResourceLimits.LENGTH_UNLIMITED);
 	}
 
 	@Override
@@ -124,13 +131,16 @@ public class JPolicyFactory extends PolicyFactory {
 	public DataRepresentation Representation() {
 		// TODO: "Extended Common Data Representation" /  "XML"
 		return new DataRepresentationImpl(getEnvironment(),
-				Arrays.asList(DataRepresentation.Id.XCDR_DATA_REPRESENTATION, DataRepresentation.Id.XML_DATA_REPRESENTATION));
+				Arrays.asList(
+						DataRepresentation.Id.XCDR_DATA_REPRESENTATION,
+						DataRepresentation.Id.XML_DATA_REPRESENTATION));
 	}
 
 	@Override
 	public TypeConsistencyEnforcement TypeConsistency() {
 		// TODO: I can't find any documentation for how this is actually used
-		return new TypeConsistencyEnforcementImpl(getEnvironment(), TypeConsistencyEnforcement.Kind.EXACT_TYPE_TYPE_CONSISTENCY);
+		return new TypeConsistencyEnforcementImpl(getEnvironment(),
+				TypeConsistencyEnforcement.Kind.EXACT_TYPE_TYPE_CONSISTENCY);
 	}
 
 	@Override
@@ -186,9 +196,5 @@ public class JPolicyFactory extends PolicyFactory {
 	@Override
 	public ServiceEnvironment getEnvironment() {
 		return spi.getEnvironment();
-	}
-
-	private static byte[] emptyBytes() {
-		return new byte[0];
 	}
 }

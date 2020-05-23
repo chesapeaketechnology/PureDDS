@@ -24,7 +24,8 @@ public class ResourceLimitsImpl extends AbstractPolicy implements ResourceLimits
 	 * @param maxSamplesPerInstance
 	 * 		Maxium number of samples to keep per single instance.
 	 */
-	public ResourceLimitsImpl(ServiceEnvironment environment, int maxSamples, int maxInstances, int maxSamplesPerInstance) {
+	public ResourceLimitsImpl(ServiceEnvironment environment, int maxSamples, int maxInstances,
+							  int maxSamplesPerInstance) {
 		super(environment);
 		this.maxSamples = maxSamples;
 		this.maxInstances = maxInstances;

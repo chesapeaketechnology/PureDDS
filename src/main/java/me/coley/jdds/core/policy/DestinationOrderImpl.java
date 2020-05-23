@@ -15,6 +15,8 @@ public class DestinationOrderImpl extends AbstractPolicy implements DestinationO
 	/**
 	 * @param environment
 	 * 		Environment context.
+	 * @param kind
+	 * 		Order kind
 	 */
 	public DestinationOrderImpl(ServiceEnvironment environment, Kind kind) {
 		super(environment);

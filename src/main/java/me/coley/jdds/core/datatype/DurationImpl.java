@@ -82,7 +82,8 @@ public class DurationImpl extends Duration {
 		if (isInfinite() || duration.isZero()) {
 			return new DurationImpl(getEnvironment(), nanoDuration);
 		}
-		return new DurationImpl(getEnvironment(), TimeUtil.add(nanoDuration, duration.getDuration(TimeUnit.NANOSECONDS)));
+		return new DurationImpl(getEnvironment(),
+				TimeUtil.add(nanoDuration, duration.getDuration(TimeUnit.NANOSECONDS)));
 	}
 
 

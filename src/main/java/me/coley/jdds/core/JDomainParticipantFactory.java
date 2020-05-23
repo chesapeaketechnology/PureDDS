@@ -73,12 +73,11 @@ public class JDomainParticipantFactory extends DomainParticipantFactory {
 	public DomainParticipant createParticipant(int domainId, DomainParticipantQos qos,
 											   DomainParticipantListener listener,
 											   Collection<Class<? extends Status>> statuses) {
-		return participantMap.computeIfAbsent(domainId,
-				d -> {
-					DomainParticipant participant = new JDomainParticipant(getEnvironment(), d, qos, listener, statuses);
-					participant.enable();
-					return participant;
-				});
+		return participantMap.computeIfAbsent(domainId, d -> {
+			DomainParticipant participant = new JDomainParticipant(getEnvironment(), d, qos, listener, statuses);
+			participant.enable();
+			return participant;
+		});
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package me.coley.jdds.core;
 
 import me.coley.jdds.core.datatype.DurationImpl;
+import me.coley.jdds.core.datatype.KeyedBytesImpl;
+import me.coley.jdds.core.datatype.KeyedStringImpl;
 import me.coley.jdds.core.datatype.ModifiableTimeImpl;
 import me.coley.jdds.core.datatype.TimeImpl;
 import me.coley.jdds.core.handle.ImmutableInstanceHandleImpl;
@@ -25,6 +27,9 @@ import org.omg.dds.type.dynamic.DynamicTypeFactory;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import static me.coley.jdds.util.MiscUtil.emptyBytes;
+import static me.coley.jdds.util.MiscUtil.emptyString;
+
 /**
  * Service provider implementation.
  *
@@ -32,6 +37,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class JServiceProvider implements ServiceEnvironment.ServiceProviderInterface {
 	private final JServiceEnvironment environment;
+	private final JPolicyFactory policyFactory = new JPolicyFactory(this);
 
 	/**
 	 * Create a new service provider.
@@ -95,13 +101,12 @@ public class JServiceProvider implements ServiceEnvironment.ServiceProviderInter
 
 	@Override
 	public GuardCondition newGuardCondition() {
-		return null;
+		return new GuardConditionImpl(this);
 	}
 
 	@Override
 	public WaitSet newWaitSet() {
-		// TODO: WaitSet
-		return null;
+		return new WaitSetImpl(this);
 	}
 
 	@Override
@@ -124,8 +129,7 @@ public class JServiceProvider implements ServiceEnvironment.ServiceProviderInter
 
 	@Override
 	public PolicyFactory getPolicyFactory() {
-		// TODO: PolicyFactory and all policy implementation classes
-		return new JPolicyFactory(this);
+		return policyFactory;
 	}
 
 	@Override
@@ -136,14 +140,12 @@ public class JServiceProvider implements ServiceEnvironment.ServiceProviderInter
 
 	@Override
 	public KeyedString newKeyedString() {
-		// TODO: KString
-		return null;
+		return new KeyedStringImpl(getEnvironment(), emptyString(), emptyString());
 	}
 
 	@Override
 	public KeyedBytes newKeyedBytes() {
-		// TODO: KBytes
-		return null;
+		return new KeyedBytesImpl(getEnvironment(), emptyString(), emptyBytes());
 	}
 
 	/**

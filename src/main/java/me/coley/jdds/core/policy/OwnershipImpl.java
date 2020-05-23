@@ -15,6 +15,8 @@ public class OwnershipImpl extends AbstractPolicy implements Ownership {
 	/**
 	 * @param environment
 	 * 		Environment context.
+	 * @param kind
+	 * 		Ownership kind.
 	 */
 	public OwnershipImpl(ServiceEnvironment environment, Kind kind) {
 		super(environment);

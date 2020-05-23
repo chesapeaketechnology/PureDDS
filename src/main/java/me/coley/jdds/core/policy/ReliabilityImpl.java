@@ -52,7 +52,8 @@ public class ReliabilityImpl extends AbstractPolicy implements Reliability {
 
 	@Override
 	public Reliability withMaxBlockingTime(long maxBlockingTime, TimeUnit unit) {
-		return new ReliabilityImpl(getEnvironment(), getKind(), getEnvironment().getSPI().newDuration(maxBlockingTime, unit));
+		return new ReliabilityImpl(getEnvironment(), getKind(),
+				getEnvironment().getSPI().newDuration(maxBlockingTime, unit));
 	}
 
 	@Override
