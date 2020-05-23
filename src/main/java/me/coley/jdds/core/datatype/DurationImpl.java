@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Matt Coley
  */
-public class JDuration extends Duration {
+public class DurationImpl extends Duration {
 	private final JServiceEnvironment environment;
 	private final long nanoDuration;
 
@@ -25,7 +25,7 @@ public class JDuration extends Duration {
 	 * @param durationUnit
 	 * 		Unit of time the given time is declared in.
 	 */
-	public JDuration(JServiceEnvironment environment, long duration, TimeUnit durationUnit) {
+	public DurationImpl(JServiceEnvironment environment, long duration, TimeUnit durationUnit) {
 		this(environment, TimeUnit.NANOSECONDS.convert(duration, durationUnit));
 	}
 
@@ -37,7 +37,7 @@ public class JDuration extends Duration {
 	 * @param nanoDuration
 	 * 		Time to use in nanoseconds.
 	 */
-	public JDuration(JServiceEnvironment environment, long nanoDuration) {
+	public DurationImpl(JServiceEnvironment environment, long nanoDuration) {
 		this.environment = environment;
 		this.nanoDuration = nanoDuration;
 	}
@@ -80,9 +80,9 @@ public class JDuration extends Duration {
 	public Duration add(Duration duration) {
 		// Check if should return copy of self
 		if (isInfinite() || duration.isZero()) {
-			return new JDuration(getEnvironment(), nanoDuration);
+			return new DurationImpl(getEnvironment(), nanoDuration);
 		}
-		return new JDuration(getEnvironment(), TimeUtil.add(nanoDuration, duration.getDuration(TimeUnit.NANOSECONDS)));
+		return new DurationImpl(getEnvironment(), TimeUtil.add(nanoDuration, duration.getDuration(TimeUnit.NANOSECONDS)));
 	}
 
 
@@ -95,13 +95,13 @@ public class JDuration extends Duration {
 	public Duration subtract(Duration duration) {
 		// Check if should return copy of self
 		if (isInfinite() || duration.isZero()) {
-			return new JDuration(getEnvironment(), nanoDuration);
+			return new DurationImpl(getEnvironment(), nanoDuration);
 		}
 		// Out of bounds
 		if (duration.getDuration(TimeUnit.NANOSECONDS) > nanoDuration) {
-			return new JDuration(getEnvironment(), 0);
+			return new DurationImpl(getEnvironment(), 0);
 		}
-		return new JDuration(getEnvironment(),
+		return new DurationImpl(getEnvironment(),
 				TimeUtil.subtract(nanoDuration, duration.getDuration(TimeUnit.NANOSECONDS)));
 	}
 

@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Matt Coley
  */
-public class JTime extends Time {
+public class TimeImpl extends Time {
 	private final JServiceEnvironment environment;
 	private final long nanoTime;
 
@@ -23,7 +23,7 @@ public class JTime extends Time {
 	 * @param environment
 	 * 		Context environment.
 	 */
-	public JTime(JServiceEnvironment environment) {
+	public TimeImpl(JServiceEnvironment environment) {
 		this(environment, TimeUtil.nanoInstant());
 	}
 
@@ -35,7 +35,7 @@ public class JTime extends Time {
 	 * @param instant
 	 * 		Time to use.
 	 */
-	public JTime(JServiceEnvironment environment, Instant instant) {
+	public TimeImpl(JServiceEnvironment environment, Instant instant) {
 		this(environment, instant.getEpochSecond() + instant.getNano());
 	}
 
@@ -47,7 +47,7 @@ public class JTime extends Time {
 	 * @param nanoTime
 	 * 		Time to use in nanoseconds.
 	 */
-	public JTime(JServiceEnvironment environment, long nanoTime) {
+	public TimeImpl(JServiceEnvironment environment, long nanoTime) {
 		this.environment = environment;
 		this.nanoTime = nanoTime;
 	}
@@ -69,7 +69,7 @@ public class JTime extends Time {
 
 	@Override
 	public ModifiableTime modifiableCopy() {
-		return new JModifiableTime(getEnvironment(), nanoTime);
+		return new ModifiableTimeImpl(getEnvironment(), nanoTime);
 	}
 
 	@Override

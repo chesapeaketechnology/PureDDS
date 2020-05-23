@@ -1,8 +1,8 @@
 package me.coley.jdds.core;
 
-import me.coley.jdds.core.datatype.JDuration;
-import me.coley.jdds.core.datatype.JModifiableTime;
-import me.coley.jdds.core.datatype.JTime;
+import me.coley.jdds.core.datatype.DurationImpl;
+import me.coley.jdds.core.datatype.ModifiableTimeImpl;
+import me.coley.jdds.core.datatype.TimeImpl;
 import me.coley.jdds.core.handle.ImmutableInstanceHandleImpl;
 import me.coley.jdds.core.handle.InstanceHandleImpl;
 import org.omg.dds.core.Duration;
@@ -60,27 +60,27 @@ public class JServiceProvider implements ServiceEnvironment.ServiceProviderInter
 
 	@Override
 	public Duration newDuration(long duration, TimeUnit unit) {
-		return new JDuration(getEnvironment(), duration, unit);
+		return new DurationImpl(getEnvironment(), duration, unit);
 	}
 
 	@Override
 	public Duration infiniteDuration() {
-		return new JDuration(getEnvironment(), Long.MAX_VALUE);
+		return new DurationImpl(getEnvironment(), Long.MAX_VALUE);
 	}
 
 	@Override
 	public Duration zeroDuration() {
-		return new JDuration(getEnvironment(), 0);
+		return new DurationImpl(getEnvironment(), 0);
 	}
 
 	@Override
 	public ModifiableTime newTime(long time, TimeUnit inputUnit) {
-		return new JModifiableTime(getEnvironment(), inputUnit.toNanos(time));
+		return new ModifiableTimeImpl(getEnvironment(), inputUnit.toNanos(time));
 	}
 
 	@Override
 	public Time invalidTime() {
-		return new JTime(getEnvironment(), -1);
+		return new TimeImpl(getEnvironment(), -1);
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public class JServiceProvider implements ServiceEnvironment.ServiceProviderInter
 	@Override
 	public PolicyFactory getPolicyFactory() {
 		// TODO: PolicyFactory and all policy implementation classes
-		return null;
+		return new JPolicyFactory(this);
 	}
 
 	@Override

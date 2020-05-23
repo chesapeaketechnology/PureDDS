@@ -14,18 +14,18 @@ import org.omg.dds.core.ServiceEnvironment;
  */
 public final class ImmutableInstanceHandleImpl extends InstanceHandle implements IEntityHandle {
 	private final Entity<?, ?> entity;
-	private final JServiceProvider service;
+	private final JServiceProvider spi;
 
 	/**
 	 * Create empty handle.
 	 *
-	 * @param service
+	 * @param spi
 	 * 		Spawning service that created the handle.
 	 * @param entity
 	 * 		Entity to point to.
 	 */
-	public ImmutableInstanceHandleImpl(JServiceProvider service, Entity<?, ?> entity) {
-		this.service = service;
+	public ImmutableInstanceHandleImpl(JServiceProvider spi, Entity<?, ?> entity) {
+		this.spi = spi;
 		this.entity = entity;
 	}
 
@@ -36,7 +36,7 @@ public final class ImmutableInstanceHandleImpl extends InstanceHandle implements
 
 	@Override
 	public ServiceEnvironment getEnvironment() {
-		return service.getEnvironment();
+		return spi.getEnvironment();
 	}
 
 	@Override

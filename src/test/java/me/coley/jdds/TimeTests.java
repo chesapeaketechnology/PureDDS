@@ -1,7 +1,7 @@
 package me.coley.jdds;
 
 import me.coley.jdds.core.JServiceEnvironment;
-import me.coley.jdds.core.datatype.JModifiableTime;
+import me.coley.jdds.core.datatype.ModifiableTimeImpl;
 import org.junit.jupiter.api.Test;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.ModifiableTime;
@@ -46,7 +46,7 @@ public class TimeTests {
 		long base = 1;
 		Time time = environment.getSPI().newTime(base, TimeUnit.SECONDS);
 		assertEquals(time, time.modifiableCopy());
-		assertEquals(time, copy(new JModifiableTime(environment, 0), t -> t.copyFrom(time)));
+		assertEquals(time, copy(new ModifiableTimeImpl(environment, 0), t -> t.copyFrom(time)));
 	}
 
 	@Test

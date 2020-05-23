@@ -1,6 +1,5 @@
 package me.coley.jdds.core;
 
-import me.coley.jdds.config.Configurator;
 import org.omg.dds.core.status.Status;
 import org.omg.dds.domain.DomainParticipant;
 import org.omg.dds.domain.DomainParticipantFactory;
@@ -19,49 +18,54 @@ import java.util.Map;
  * @author Matt Coley
  */
 public class JDomainParticipantFactory extends DomainParticipantFactory {
-	private final JServiceProvider serviceProvider;
+	private final JServiceProvider spi;
 	private final Map<Integer, DomainParticipant> participantMap = new HashMap<>();
+	private final int defaultDomain;
 	private DomainParticipantFactoryQos qos;
 	private DomainParticipantQos defaultParticipantQos;
 
 	/**
 	 * Create a factory with default options.
 	 *
-	 * @param serviceProvider
+	 * @param spi
 	 * 		Spawning provider that created the factory.
 	 */
-	public JDomainParticipantFactory(JServiceProvider serviceProvider) {
-		this(serviceProvider,
-				serviceProvider.getEnvironment().getConfigurator().getDefaultDomainParticipantFactoryQos(),
-				serviceProvider.getEnvironment().getConfigurator().getDefaultDomainParticipantQos());
+	public JDomainParticipantFactory(JServiceProvider spi) {
+		this(spi,
+				spi.getEnvironment().getConfigurator().getDefaultDomainParticipantFactoryQos(),
+				spi.getEnvironment().getConfigurator().getDefaultDomainParticipantQos(),
+				spi.getEnvironment().getConfigurator().getDefaultDomain());
 	}
 
 	/**
 	 * Create a factory with the given configurations.
 	 *
-	 * @param serviceProvider
+	 * @param spi
 	 * 		Spawning provider that created the factory.
 	 * @param qos
 	 * 		Quality of service for the factory.
 	 * @param defaultDomainParticipantQos
 	 * 		Quality of service for generated participants.
+	 * @param defaultDomain The default domain.
 	 */
-	public JDomainParticipantFactory(JServiceProvider serviceProvider,
+	public JDomainParticipantFactory(JServiceProvider spi,
 									 DomainParticipantFactoryQos qos,
-									 DomainParticipantQos defaultDomainParticipantQos) {
-		this.serviceProvider = serviceProvider;
+									 DomainParticipantQos defaultDomainParticipantQos,
+									 int defaultDomain) {
+		this.spi = spi;
 		this.qos = qos;
 		this.defaultParticipantQos = defaultDomainParticipantQos;
+		this.defaultDomain = defaultDomain;
 	}
 
 	@Override
 	public DomainParticipant createParticipant() {
-		return createParticipant(getConfigurator().getDefaultDomain());
+		return createParticipant(defaultDomain);
 	}
 
 	@Override
 	public DomainParticipant createParticipant(int domainId) {
-		return createParticipant(domainId, getConfigurator().getDefaultDomainParticipantQos(), null,
+		return createParticipant(domainId, getDefaultParticipantQos(), null,
 				Collections.emptySet());
 	}
 
@@ -104,13 +108,6 @@ public class JDomainParticipantFactory extends DomainParticipantFactory {
 
 	@Override
 	public JServiceEnvironment getEnvironment() {
-		return serviceProvider.getEnvironment();
-	}
-
-	/**
-	 * @return Environment configurator.
-	 */
-	private Configurator getConfigurator() {
-		return getEnvironment().getConfigurator();
+		return spi.getEnvironment();
 	}
 }

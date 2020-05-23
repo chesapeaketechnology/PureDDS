@@ -1,7 +1,7 @@
 package me.coley.jdds.core;
 
-import me.coley.jdds.core.datatype.JModifiableTime;
-import me.coley.jdds.core.datatype.JTime;
+import me.coley.jdds.core.datatype.ModifiableTimeImpl;
+import me.coley.jdds.core.datatype.TimeImpl;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.InstanceHandle;
 import org.omg.dds.core.ModifiableTime;
@@ -99,6 +99,12 @@ public class JDomainParticipant implements DomainParticipant {
 									 Collection<Class<? extends Status>> statuses) {
 		// TODO: Publisher
 		//  - And record with entity handle
+
+		// Participant must not be closed
+		// - If closed, throw exception
+
+		// Participant must be enabled
+
 		return null;
 	}
 
@@ -338,12 +344,12 @@ public class JDomainParticipant implements DomainParticipant {
 
 	@Override
 	public ModifiableTime getCurrentTime(ModifiableTime currentTime) {
-		return new JModifiableTime(getEnvironment());
+		return new ModifiableTimeImpl(getEnvironment());
 	}
 
 	@Override
 	public Time getCurrentTime() {
-		return new JTime(getEnvironment());
+		return new TimeImpl(getEnvironment());
 	}
 
 	@Override
@@ -384,7 +390,6 @@ public class JDomainParticipant implements DomainParticipant {
 		return environment;
 	}
 
-
 	@Override
 	public void retain() {
 		// TODO: What do here?
@@ -397,6 +402,7 @@ public class JDomainParticipant implements DomainParticipant {
 
 	@Override
 	public void enable() {
+		// TODO: Read the javadoc of enable and implemend behavior modifiers for enabled/disabled states
 		enabled = true;
 	}
 

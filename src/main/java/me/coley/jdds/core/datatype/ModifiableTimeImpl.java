@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Matt Coley
  */
-public class JModifiableTime extends ModifiableTime {
+public class ModifiableTimeImpl extends ModifiableTime {
 	private final JServiceEnvironment environment;
 	private long nanoTime;
 
@@ -24,7 +24,7 @@ public class JModifiableTime extends ModifiableTime {
 	 * @param environment
 	 * 		Context environment.
 	 */
-	public JModifiableTime(JServiceEnvironment environment) {
+	public ModifiableTimeImpl(JServiceEnvironment environment) {
 		this(environment, TimeUtil.nanoInstant());
 	}
 
@@ -36,7 +36,7 @@ public class JModifiableTime extends ModifiableTime {
 	 * @param instant
 	 * 		Time to use.
 	 */
-	public JModifiableTime(JServiceEnvironment environment, Instant instant) {
+	public ModifiableTimeImpl(JServiceEnvironment environment, Instant instant) {
 		this(environment, instant.getEpochSecond() + instant.getNano());
 	}
 
@@ -48,7 +48,7 @@ public class JModifiableTime extends ModifiableTime {
 	 * @param nanoTime
 	 * 		Time to use in nanoseconds.
 	 */
-	public JModifiableTime(JServiceEnvironment environment, long nanoTime) {
+	public ModifiableTimeImpl(JServiceEnvironment environment, long nanoTime) {
 		this.environment = environment;
 		this.nanoTime = nanoTime;
 	}
@@ -70,7 +70,7 @@ public class JModifiableTime extends ModifiableTime {
 
 	@Override
 	public ModifiableTime modifiableCopy() {
-		return new JModifiableTime(getEnvironment(), nanoTime);
+		return new ModifiableTimeImpl(getEnvironment(), nanoTime);
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class JModifiableTime extends ModifiableTime {
 
 	@Override
 	public Time immutableCopy() {
-		return new JTime(getEnvironment(), nanoTime);
+		return new TimeImpl(getEnvironment(), nanoTime);
 	}
 
 	@Override
