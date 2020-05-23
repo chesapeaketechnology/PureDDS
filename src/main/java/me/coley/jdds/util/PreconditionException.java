@@ -1,4 +1,4 @@
-package me.coley.jdds.core;
+package me.coley.jdds.util;
 
 import org.omg.dds.core.PreconditionNotMetException;
 import org.omg.dds.core.ServiceEnvironment;

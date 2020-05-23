@@ -1,12 +1,16 @@
 package me.coley.jdds.core;
 
+import me.coley.jdds.core.condition.GuardConditionImpl;
+import me.coley.jdds.core.condition.WaitSetImpl;
 import me.coley.jdds.core.datatype.DurationImpl;
 import me.coley.jdds.core.datatype.KeyedBytesImpl;
 import me.coley.jdds.core.datatype.KeyedStringImpl;
 import me.coley.jdds.core.datatype.ModifiableTimeImpl;
 import me.coley.jdds.core.datatype.TimeImpl;
+import me.coley.jdds.domain.DomainParticipantFactoryImpl;
 import me.coley.jdds.core.handle.ImmutableInstanceHandleImpl;
 import me.coley.jdds.core.handle.InstanceHandleImpl;
+import me.coley.jdds.core.policy.PolicyFactoryImpl;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.GuardCondition;
 import org.omg.dds.core.InstanceHandle;
@@ -35,9 +39,9 @@ import static me.coley.jdds.util.MiscUtil.emptyString;
  *
  * @author Matt Coley
  */
-public class JServiceProvider implements ServiceEnvironment.ServiceProviderInterface {
+public class ServiceProviderImpl implements ServiceEnvironment.ServiceProviderInterface {
 	private final JServiceEnvironment environment;
-	private final JPolicyFactory policyFactory = new JPolicyFactory(this);
+	private final PolicyFactoryImpl policyFactory = new PolicyFactoryImpl(this);
 
 	/**
 	 * Create a new service provider.
@@ -45,13 +49,13 @@ public class JServiceProvider implements ServiceEnvironment.ServiceProviderInter
 	 * @param environment
 	 * 		Spawning environment responsible for generating this instance.
 	 */
-	public JServiceProvider(JServiceEnvironment environment) {
+	public ServiceProviderImpl(JServiceEnvironment environment) {
 		this.environment = environment;
 	}
 
 	@Override
 	public DomainParticipantFactory getParticipantFactory() {
-		return new JDomainParticipantFactory(this);
+		return new DomainParticipantFactoryImpl(this);
 	}
 
 	@Override

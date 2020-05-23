@@ -1,5 +1,7 @@
-package me.coley.jdds.core;
+package me.coley.jdds.domain;
 
+import me.coley.jdds.core.JServiceEnvironment;
+import me.coley.jdds.core.ServiceProviderImpl;
 import org.omg.dds.core.status.Status;
 import org.omg.dds.domain.DomainParticipant;
 import org.omg.dds.domain.DomainParticipantFactory;
@@ -17,8 +19,8 @@ import java.util.Map;
  *
  * @author Matt Coley
  */
-public class JDomainParticipantFactory extends DomainParticipantFactory {
-	private final JServiceProvider spi;
+public class DomainParticipantFactoryImpl extends DomainParticipantFactory {
+	private final ServiceProviderImpl spi;
 	private final Map<Integer, DomainParticipant> participantMap = new HashMap<>();
 	private final int defaultDomain;
 	private DomainParticipantFactoryQos qos;
@@ -30,7 +32,7 @@ public class JDomainParticipantFactory extends DomainParticipantFactory {
 	 * @param spi
 	 * 		Spawning provider that created the factory.
 	 */
-	public JDomainParticipantFactory(JServiceProvider spi) {
+	public DomainParticipantFactoryImpl(ServiceProviderImpl spi) {
 		this(spi,
 				spi.getEnvironment().getConfigurator().getDefaultDomainParticipantFactoryQos(),
 				spi.getEnvironment().getConfigurator().getDefaultDomainParticipantQos(),
@@ -48,10 +50,10 @@ public class JDomainParticipantFactory extends DomainParticipantFactory {
 	 * 		Quality of service for generated participants.
 	 * @param defaultDomain The default domain.
 	 */
-	public JDomainParticipantFactory(JServiceProvider spi,
-									 DomainParticipantFactoryQos qos,
-									 DomainParticipantQos defaultDomainParticipantQos,
-									 int defaultDomain) {
+	public DomainParticipantFactoryImpl(ServiceProviderImpl spi,
+										DomainParticipantFactoryQos qos,
+										DomainParticipantQos defaultDomainParticipantQos,
+										int defaultDomain) {
 		this.spi = spi;
 		this.qos = qos;
 		this.defaultParticipantQos = defaultDomainParticipantQos;
@@ -74,7 +76,7 @@ public class JDomainParticipantFactory extends DomainParticipantFactory {
 											   DomainParticipantListener listener,
 											   Collection<Class<? extends Status>> statuses) {
 		return participantMap.computeIfAbsent(domainId, d -> {
-			DomainParticipant participant = new JDomainParticipant(getEnvironment(), d, qos, listener, statuses);
+			DomainParticipant participant = new DomainParticipantImpl(getEnvironment(), d, qos, listener, statuses);
 			participant.enable();
 			return participant;
 		});

@@ -1,5 +1,7 @@
-package me.coley.jdds.core;
+package me.coley.jdds.core.condition;
 
+import me.coley.jdds.core.ServiceProviderImpl;
+import me.coley.jdds.util.PreconditionException;
 import org.omg.dds.core.Condition;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.ServiceEnvironment;
@@ -21,7 +23,7 @@ import java.util.concurrent.TimeoutException;
  * @author Matt Coley
  */
 public class WaitSetImpl extends WaitSet {
-	private final JServiceProvider spi;
+	private final ServiceProviderImpl spi;
 	private final Collection<Condition> conditions = new HashSet<>();
 	private final Map<Long, List<?>> tmap = new HashMap<>();
 
@@ -29,7 +31,7 @@ public class WaitSetImpl extends WaitSet {
 	 * @param spi
 	 * 		Spawning provider that created the factory.
 	 */
-	public WaitSetImpl(JServiceProvider spi) {
+	public WaitSetImpl(ServiceProviderImpl spi) {
 		this.spi = spi;
 	}
 

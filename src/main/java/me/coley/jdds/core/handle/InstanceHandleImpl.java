@@ -1,6 +1,6 @@
 package me.coley.jdds.core.handle;
 
-import me.coley.jdds.core.JServiceProvider;
+import me.coley.jdds.core.ServiceProviderImpl;
 import org.omg.dds.core.Entity;
 import org.omg.dds.core.InstanceHandle;
 import org.omg.dds.core.ModifiableInstanceHandle;
@@ -12,7 +12,7 @@ import org.omg.dds.core.ServiceEnvironment;
  * @author Matt Coley
  */
 public class InstanceHandleImpl extends ModifiableInstanceHandle implements IEntityHandle {
-	private final JServiceProvider spi;
+	private final ServiceProviderImpl spi;
 	private Entity<?, ?> entity;
 
 	/**
@@ -21,7 +21,7 @@ public class InstanceHandleImpl extends ModifiableInstanceHandle implements IEnt
 	 * @param spi
 	 * 		Spawning service that created the handle.
 	 */
-	public InstanceHandleImpl(JServiceProvider spi) {
+	public InstanceHandleImpl(ServiceProviderImpl spi) {
 		this.spi = spi;
 	}
 

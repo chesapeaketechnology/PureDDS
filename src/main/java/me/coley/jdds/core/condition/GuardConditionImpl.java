@@ -1,5 +1,7 @@
-package me.coley.jdds.core;
+package me.coley.jdds.core.condition;
 
+import me.coley.jdds.core.JServiceEnvironment;
+import me.coley.jdds.core.ServiceProviderImpl;
 import org.omg.dds.core.GuardCondition;
 import org.omg.dds.core.ServiceEnvironment;
 
@@ -16,7 +18,7 @@ public class GuardConditionImpl extends GuardCondition {
 	 * @param spi
 	 * 		Spawning provider.
 	 */
-	public GuardConditionImpl(JServiceProvider spi) {
+	public GuardConditionImpl(ServiceProviderImpl spi) {
 		this.environment = spi.getEnvironment();
 	}
 

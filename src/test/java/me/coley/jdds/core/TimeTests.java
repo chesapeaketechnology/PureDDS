@@ -1,6 +1,5 @@
-package me.coley.jdds;
+package me.coley.jdds.core;
 
-import me.coley.jdds.core.JServiceEnvironment;
 import me.coley.jdds.core.datatype.ModifiableTimeImpl;
 import org.junit.jupiter.api.Test;
 import org.omg.dds.core.Duration;

@@ -10,7 +10,7 @@ import org.omg.dds.core.ServiceEnvironment;
  */
 public class JServiceEnvironment extends ServiceEnvironment {
 	private final Configurator configurator = new Configurator();
-	private final JServiceProvider spi = new JServiceProvider(this);
+	private final ServiceProviderImpl spi = new ServiceProviderImpl(this);
 
 	/**
 	 * @return Configurator responsible for populating default values of dds types.

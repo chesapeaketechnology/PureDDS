@@ -1,27 +1,6 @@
-package me.coley.jdds.core;
+package me.coley.jdds.core.policy;
 
-import me.coley.jdds.core.policy.DataRepresentationImpl;
-import me.coley.jdds.core.policy.DeadlineImpl;
-import me.coley.jdds.core.policy.DestinationOrderImpl;
-import me.coley.jdds.core.policy.DurabilityImpl;
-import me.coley.jdds.core.policy.DurabilityServiceImpl;
-import me.coley.jdds.core.policy.EntityFactoryImpl;
-import me.coley.jdds.core.policy.GroupDataImpl;
-import me.coley.jdds.core.policy.HistoryImpl;
-import me.coley.jdds.core.policy.LatencyBudgetImpl;
-import me.coley.jdds.core.policy.LifespanImpl;
-import me.coley.jdds.core.policy.LivelinessImpl;
-import me.coley.jdds.core.policy.OwnershipImpl;
-import me.coley.jdds.core.policy.OwnershipStrengthImpl;
-import me.coley.jdds.core.policy.PartitionImpl;
-import me.coley.jdds.core.policy.ReaderDataLifecycleImpl;
-import me.coley.jdds.core.policy.ReliabilityImpl;
-import me.coley.jdds.core.policy.ResourceLimitsImpl;
-import me.coley.jdds.core.policy.TimeBasedFilterImpl;
-import me.coley.jdds.core.policy.TransportPriorityImpl;
-import me.coley.jdds.core.policy.TypeConsistencyEnforcementImpl;
-import me.coley.jdds.core.policy.UserDataImpl;
-import me.coley.jdds.core.policy.WriterDataLifecycleImpl;
+import me.coley.jdds.core.ServiceProviderImpl;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.ServiceEnvironment;
 import org.omg.dds.core.policy.DataRepresentation;
@@ -59,18 +38,18 @@ import static me.coley.jdds.util.MiscUtil.emptyBytes;
  *
  * @author Matt Coley
  */
-public class JPolicyFactory extends PolicyFactory {
+public class PolicyFactoryImpl extends PolicyFactory {
 	private static final int DEFAULT_HISTORY_DEPTH = 1;
 	private static final int DEFAULT_TRANSPORT_PRIORITY = 0;
 	private static final int DEFAULT_OWNERSHIP_STRENGTH = 0;
 	private static Duration defaultReliabilityDelay;
-	private final JServiceProvider spi;
+	private final ServiceProviderImpl spi;
 
 	/**
 	 * @param spi
 	 * 		Spawning provider that created the factory.
 	 */
-	public JPolicyFactory(JServiceProvider spi) {
+	public PolicyFactoryImpl(ServiceProviderImpl spi) {
 		this.spi = spi;
 		// TODO: Refactor these defaults into the configurator
 		defaultReliabilityDelay = spi.newDuration(100000000, TimeUnit.NANOSECONDS);

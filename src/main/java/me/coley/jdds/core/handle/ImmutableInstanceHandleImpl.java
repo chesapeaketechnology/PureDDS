@@ -1,6 +1,6 @@
 package me.coley.jdds.core.handle;
 
-import me.coley.jdds.core.JServiceProvider;
+import me.coley.jdds.core.ServiceProviderImpl;
 import org.omg.dds.core.Entity;
 import org.omg.dds.core.InstanceHandle;
 import org.omg.dds.core.ModifiableInstanceHandle;
@@ -14,7 +14,7 @@ import org.omg.dds.core.ServiceEnvironment;
  */
 public final class ImmutableInstanceHandleImpl extends InstanceHandle implements IEntityHandle {
 	private final Entity<?, ?> entity;
-	private final JServiceProvider spi;
+	private final ServiceProviderImpl spi;
 
 	/**
 	 * Create empty handle.
@@ -24,7 +24,7 @@ public final class ImmutableInstanceHandleImpl extends InstanceHandle implements
 	 * @param entity
 	 * 		Entity to point to.
 	 */
-	public ImmutableInstanceHandleImpl(JServiceProvider spi, Entity<?, ?> entity) {
+	public ImmutableInstanceHandleImpl(ServiceProviderImpl spi, Entity<?, ?> entity) {
 		this.spi = spi;
 		this.entity = entity;
 	}

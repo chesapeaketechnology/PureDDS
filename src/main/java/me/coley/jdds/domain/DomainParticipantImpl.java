@@ -1,5 +1,6 @@
-package me.coley.jdds.core;
+package me.coley.jdds.domain;
 
+import me.coley.jdds.core.JServiceEnvironment;
 import me.coley.jdds.core.datatype.ModifiableTimeImpl;
 import me.coley.jdds.core.datatype.TimeImpl;
 import org.omg.dds.core.Duration;
@@ -42,7 +43,7 @@ import java.util.concurrent.TimeoutException;
  *
  * @author Matt Coley
  */
-public class JDomainParticipant implements DomainParticipant {
+public class DomainParticipantImpl implements DomainParticipant {
 	private final JServiceEnvironment environment;
 	private final InstanceHandle handle;
 	private final int domainId;
@@ -75,8 +76,8 @@ public class JDomainParticipant implements DomainParticipant {
 	 * @param statuses
 	 * 		TODO: Describe
 	 */
-	public JDomainParticipant(JServiceEnvironment environment, int domainId, DomainParticipantQos qos,
-							  DomainParticipantListener listener, Collection<Class<? extends Status>> statuses) {
+	public DomainParticipantImpl(JServiceEnvironment environment, int domainId, DomainParticipantQos qos,
+								 DomainParticipantListener listener, Collection<Class<? extends Status>> statuses) {
 		this.environment = environment;
 		this.handle = environment.getSPI().newInstanceHandle();
 		this.domainId = domainId;
