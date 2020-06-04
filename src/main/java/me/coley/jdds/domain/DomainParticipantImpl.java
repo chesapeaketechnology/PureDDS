@@ -2,6 +2,7 @@ package me.coley.jdds.domain;
 
 import me.coley.jdds.core.datatype.ModifiableTimeImpl;
 import me.coley.jdds.core.datatype.TimeImpl;
+import me.coley.jdds.topic.TopicImpl;
 import org.omg.dds.core.*;
 import org.omg.dds.core.status.Status;
 import org.omg.dds.domain.DomainParticipant;
@@ -56,6 +57,8 @@ public class DomainParticipantImpl implements DomainParticipant {
 	private PublisherQos defaultPublisherQos;
 	private SubscriberQos defaultSubscriberQos;
 	private TopicQos defaultTopicQos;
+	private Set<InstanceHandle> discoveredTopics;
+	private Set<InstanceHandle> discoveredParticipants;
 
 	/**
 	 * Create the participant.
@@ -136,9 +139,9 @@ public class DomainParticipantImpl implements DomainParticipant {
 	@Override
 	public <T> Topic<T> createTopic(String topicName, Class<T> type, TopicQos qos, TopicListener<T> listener,
 									Collection<Class<? extends Status>> statuses) {
-		// TODO: Create topic
-		//  - And record with entity handle
-		return null;
+		Topic<T> topic = new TopicImpl<>(getEnvironment(), topicName, type, qos, listener, statuses);
+		discoveredTopics.add(topic.getInstanceHandle());
+		return topic;
 	}
 
 	@Override
@@ -149,9 +152,9 @@ public class DomainParticipantImpl implements DomainParticipant {
 	@Override
 	public <T> Topic<T> createTopic(String topicName, TypeSupport<T> type, TopicQos qos, TopicListener<T> listener,
 									Collection<Class<? extends Status>> statuses) {
-		// TODO: Create topic
-		//  - And record with entity handle
-		return null;
+		Topic<T> topic = new TopicImpl<>(getEnvironment(), topicName, type, qos, listener, statuses);
+		discoveredTopics.add(topic.getInstanceHandle());
+		return topic;
 	}
 
 	@Override
@@ -305,13 +308,14 @@ public class DomainParticipantImpl implements DomainParticipant {
 
 	@Override
 	public void setQos(String qosLibraryName, String qosProfileName) {
-		// TODO: QOS lookup, I think "qosLibraryName" should be a URI
+		QosProvider provider = getEnvironment().getSPI().newQosProvider(qosLibraryName, qosProfileName);
+		if (provider != null)
+			setQos(provider.getDomainParticipantQos());
 	}
 
 	@Override
 	public Set<InstanceHandle> getDiscoveredParticipants() {
-		// TODO: Record discovered participants
-		return null;
+		return discoveredParticipants;
 	}
 
 	@Override
@@ -322,8 +326,7 @@ public class DomainParticipantImpl implements DomainParticipant {
 
 	@Override
 	public Set<InstanceHandle> getDiscoveredTopics() {
-		// TODO: Record discovered topics
-		return null;
+		return discoveredTopics;
 	}
 
 	@Override
