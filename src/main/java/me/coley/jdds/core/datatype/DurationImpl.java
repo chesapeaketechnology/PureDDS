@@ -1,8 +1,8 @@
 package me.coley.jdds.core.datatype;
 
-import me.coley.jdds.core.JServiceEnvironment;
 import me.coley.jdds.util.TimeUtil;
 import org.omg.dds.core.Duration;
+import org.omg.dds.core.ServiceEnvironment;
 
 import java.util.concurrent.TimeUnit;
 
@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * @author Matt Coley
  */
 public class DurationImpl extends Duration {
-	private final JServiceEnvironment environment;
+	private final ServiceEnvironment environment;
 	private final long nanoDuration;
 
 	/**
@@ -25,7 +25,7 @@ public class DurationImpl extends Duration {
 	 * @param durationUnit
 	 * 		Unit of time the given time is declared in.
 	 */
-	public DurationImpl(JServiceEnvironment environment, long duration, TimeUnit durationUnit) {
+	public DurationImpl(ServiceEnvironment environment, long duration, TimeUnit durationUnit) {
 		this(environment, TimeUnit.NANOSECONDS.convert(duration, durationUnit));
 	}
 
@@ -37,7 +37,7 @@ public class DurationImpl extends Duration {
 	 * @param nanoDuration
 	 * 		Time to use in nanoseconds.
 	 */
-	public DurationImpl(JServiceEnvironment environment, long nanoDuration) {
+	public DurationImpl(ServiceEnvironment environment, long nanoDuration) {
 		this.environment = environment;
 		this.nanoDuration = nanoDuration;
 	}
@@ -107,7 +107,7 @@ public class DurationImpl extends Duration {
 	}
 
 	@Override
-	public JServiceEnvironment getEnvironment() {
+	public ServiceEnvironment getEnvironment() {
 		return environment;
 	}
 

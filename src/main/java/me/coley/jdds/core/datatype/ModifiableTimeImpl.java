@@ -1,9 +1,9 @@
 package me.coley.jdds.core.datatype;
 
-import me.coley.jdds.core.JServiceEnvironment;
 import me.coley.jdds.util.TimeUtil;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.ModifiableTime;
+import org.omg.dds.core.ServiceEnvironment;
 import org.omg.dds.core.Time;
 
 import java.time.Instant;
@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  * @author Matt Coley
  */
 public class ModifiableTimeImpl extends ModifiableTime {
-	private final JServiceEnvironment environment;
+	private final ServiceEnvironment environment;
 	private long nanoTime;
 
 	/**
@@ -24,7 +24,7 @@ public class ModifiableTimeImpl extends ModifiableTime {
 	 * @param environment
 	 * 		Context environment.
 	 */
-	public ModifiableTimeImpl(JServiceEnvironment environment) {
+	public ModifiableTimeImpl(ServiceEnvironment environment) {
 		this(environment, TimeUtil.nanoInstant());
 	}
 
@@ -36,7 +36,7 @@ public class ModifiableTimeImpl extends ModifiableTime {
 	 * @param instant
 	 * 		Time to use.
 	 */
-	public ModifiableTimeImpl(JServiceEnvironment environment, Instant instant) {
+	public ModifiableTimeImpl(ServiceEnvironment environment, Instant instant) {
 		this(environment, instant.getEpochSecond() + instant.getNano());
 	}
 
@@ -48,7 +48,7 @@ public class ModifiableTimeImpl extends ModifiableTime {
 	 * @param nanoTime
 	 * 		Time to use in nanoseconds.
 	 */
-	public ModifiableTimeImpl(JServiceEnvironment environment, long nanoTime) {
+	public ModifiableTimeImpl(ServiceEnvironment environment, long nanoTime) {
 		this.environment = environment;
 		this.nanoTime = nanoTime;
 	}
@@ -74,7 +74,7 @@ public class ModifiableTimeImpl extends ModifiableTime {
 	}
 
 	@Override
-	public JServiceEnvironment getEnvironment() {
+	public ServiceEnvironment getEnvironment() {
 		return environment;
 	}
 

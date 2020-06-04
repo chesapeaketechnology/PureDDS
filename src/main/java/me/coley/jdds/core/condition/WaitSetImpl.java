@@ -1,6 +1,5 @@
 package me.coley.jdds.core.condition;
 
-import me.coley.jdds.core.ServiceProviderImpl;
 import me.coley.jdds.util.PreconditionException;
 import org.omg.dds.core.Condition;
 import org.omg.dds.core.Duration;
@@ -23,16 +22,16 @@ import java.util.concurrent.TimeoutException;
  * @author Matt Coley
  */
 public class WaitSetImpl extends WaitSet {
-	private final ServiceProviderImpl spi;
+	private final ServiceEnvironment environment;
 	private final Collection<Condition> conditions = new HashSet<>();
 	private final Map<Long, List<?>> tmap = new HashMap<>();
 
 	/**
-	 * @param spi
-	 * 		Spawning provider that created the factory.
+	 * @param environment
+	 * 		Environment context.
 	 */
-	public WaitSetImpl(ServiceProviderImpl spi) {
-		this.spi = spi;
+	public WaitSetImpl(ServiceEnvironment environment) {
+		this.environment = environment;
 	}
 
 	@Override
@@ -43,7 +42,7 @@ public class WaitSetImpl extends WaitSet {
 	@Override
 	public void waitForConditions(Collection<Condition> activeConditions) {
 		try {
-			waitForConditions(activeConditions, spi.infiniteDuration());
+			waitForConditions(activeConditions, getEnvironment().getSPI().infiniteDuration());
 		} catch (TimeoutException e) {
 			// This is NOT going to happen with an infinite duration
 		}
@@ -51,7 +50,7 @@ public class WaitSetImpl extends WaitSet {
 
 	@Override
 	public void waitForConditions(long timeout, TimeUnit unit) throws TimeoutException {
-		waitForConditions(spi.newDuration(timeout, unit));
+		waitForConditions(getEnvironment().getSPI().newDuration(timeout, unit));
 	}
 
 	@Override
@@ -62,7 +61,7 @@ public class WaitSetImpl extends WaitSet {
 	@Override
 	public void waitForConditions(Collection<Condition> activeConditions, long timeout, TimeUnit unit)
 			throws TimeoutException {
-		waitForConditions(activeConditions, spi.newDuration(timeout, unit));
+		waitForConditions(activeConditions, getEnvironment().getSPI().newDuration(timeout, unit));
 	}
 
 	@Override
@@ -94,9 +93,9 @@ public class WaitSetImpl extends WaitSet {
 				throw new TimeoutException();
 			}
 		}
-		// The docs say "the result of the wait operation is the list of..."
-		// but this is CLEARLY a void method... uhhh.....
-		// If there was a return, it would be "tmap.get(threadId)"
+		// DOCS: The docs say "the result of the wait operation is the list of..."
+		//  but this is CLEARLY a void method... uhhh.....
+		//  If there was a return, it would be "tmap.get(threadId)"
 		tmap.remove(threadId);
 	}
 
@@ -123,7 +122,7 @@ public class WaitSetImpl extends WaitSet {
 
 	@Override
 	public ServiceEnvironment getEnvironment() {
-		return spi.getEnvironment();
+		return environment;
 	}
 
 	/**

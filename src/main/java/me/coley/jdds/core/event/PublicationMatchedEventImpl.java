@@ -27,7 +27,8 @@ public class PublicationMatchedEventImpl<T> extends PublicationMatchedEvent<T> {
 	 * @param status
 	 * 		The status of the event.
 	 */
-	public PublicationMatchedEventImpl(ServiceEnvironment environment, DataWriter<T> source, PublicationMatchedStatus status) {
+	public PublicationMatchedEventImpl(ServiceEnvironment environment, DataWriter<T> source,
+									   PublicationMatchedStatus status) {
 		super(source);
 		this.environment = environment;
 		this.status = status;
@@ -46,7 +47,8 @@ public class PublicationMatchedEventImpl<T> extends PublicationMatchedEvent<T> {
 
 	@Override
 	public PublicationMatchedEvent<T> clone() {
-		return new PublicationMatchedEventImpl<>(getEnvironment(), getSource(), new PublicationMatchedStatusImpl(getStatus()));
+		return new PublicationMatchedEventImpl<>(getEnvironment(), getSource(),
+				new PublicationMatchedStatusImpl(getStatus()));
 	}
 
 	@Override

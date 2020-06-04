@@ -1,6 +1,5 @@
 package me.coley.jdds.core.handle;
 
-import me.coley.jdds.core.ServiceProviderImpl;
 import org.omg.dds.core.Entity;
 import org.omg.dds.core.InstanceHandle;
 import org.omg.dds.core.ModifiableInstanceHandle;
@@ -12,17 +11,17 @@ import org.omg.dds.core.ServiceEnvironment;
  * @author Matt Coley
  */
 public class InstanceHandleImpl extends ModifiableInstanceHandle implements IEntityHandle {
-	private final ServiceProviderImpl spi;
+	private final ServiceEnvironment environment;
 	private Entity<?, ?> entity;
 
 	/**
 	 * Create empty handle.
 	 *
-	 * @param spi
-	 * 		Spawning service that created the handle.
+	 * @param environment
+	 * 		Environment context.
 	 */
-	public InstanceHandleImpl(ServiceProviderImpl spi) {
-		this.spi = spi;
+	public InstanceHandleImpl(ServiceEnvironment environment) {
+		this.environment = environment;
 	}
 
 	/**
@@ -46,17 +45,17 @@ public class InstanceHandleImpl extends ModifiableInstanceHandle implements IEnt
 
 	@Override
 	public InstanceHandle immutableCopy() {
-		return new ImmutableInstanceHandleImpl(spi, getEntity());
+		return new ImmutableInstanceHandleImpl(getEnvironment(), getEntity());
 	}
 
 	@Override
 	public ModifiableInstanceHandle modifiableCopy() {
-		return spi.newInstanceHandle().withEntity(getEntity());
+		return new InstanceHandleImpl(getEnvironment()).withEntity(getEntity());
 	}
 
 	@Override
 	public ServiceEnvironment getEnvironment() {
-		return spi.getEnvironment();
+		return environment;
 	}
 
 	@Override

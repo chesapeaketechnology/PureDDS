@@ -1,6 +1,5 @@
 package me.coley.jdds.core.policy;
 
-import me.coley.jdds.core.ServiceProviderImpl;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.ServiceEnvironment;
 import org.omg.dds.core.policy.DataRepresentation;
@@ -43,16 +42,16 @@ public class PolicyFactoryImpl extends PolicyFactory {
 	private static final int DEFAULT_TRANSPORT_PRIORITY = 0;
 	private static final int DEFAULT_OWNERSHIP_STRENGTH = 0;
 	private static Duration defaultReliabilityDelay;
-	private final ServiceProviderImpl spi;
+	private final ServiceEnvironment environment;
 
 	/**
-	 * @param spi
-	 * 		Spawning provider that created the factory.
+	 * @param environment
+	 * 		Environment context.
 	 */
-	public PolicyFactoryImpl(ServiceProviderImpl spi) {
-		this.spi = spi;
+	public PolicyFactoryImpl(ServiceEnvironment environment) {
+		this.environment = environment;
 		// TODO: Refactor these defaults into the configurator
-		defaultReliabilityDelay = spi.newDuration(100000000, TimeUnit.NANOSECONDS);
+		defaultReliabilityDelay = environment.getSPI().newDuration(100000000, TimeUnit.NANOSECONDS);
 	}
 
 	@Override
@@ -62,17 +61,18 @@ public class PolicyFactoryImpl extends PolicyFactory {
 
 	@Override
 	public Deadline Deadline() {
-		return new DeadlineImpl(getEnvironment(), spi.infiniteDuration());
+		return new DeadlineImpl(getEnvironment(), getEnvironment().getSPI().infiniteDuration());
 	}
 
 	@Override
 	public LatencyBudget LatencyBudget() {
-		return new LatencyBudgetImpl(getEnvironment(), spi.zeroDuration());
+		return new LatencyBudgetImpl(getEnvironment(), getEnvironment().getSPI().zeroDuration());
 	}
 
 	@Override
 	public Liveliness Liveliness() {
-		return new LivelinessImpl(getEnvironment(), Liveliness.Kind.AUTOMATIC, spi.infiniteDuration());
+		return new LivelinessImpl(getEnvironment(), Liveliness.Kind.AUTOMATIC,
+				getEnvironment().getSPI().infiniteDuration());
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class PolicyFactoryImpl extends PolicyFactory {
 
 	@Override
 	public TimeBasedFilter TimeBasedFilter() {
-		return new TimeBasedFilterImpl(getEnvironment(), spi.zeroDuration());
+		return new TimeBasedFilterImpl(getEnvironment(), getEnvironment().getSPI().zeroDuration());
 	}
 
 	@Override
@@ -117,14 +117,15 @@ public class PolicyFactoryImpl extends PolicyFactory {
 
 	@Override
 	public TypeConsistencyEnforcement TypeConsistency() {
-		// TODO: I can't find any documentation for how this is actually used
+		// DOCS: I can't find any documentation for how this is actually used
 		return new TypeConsistencyEnforcementImpl(getEnvironment(),
 				TypeConsistencyEnforcement.Kind.EXACT_TYPE_TYPE_CONSISTENCY);
 	}
 
 	@Override
 	public DurabilityService DurabilityService() {
-		return new DurabilityServiceImpl(getEnvironment(), spi.zeroDuration(), History(), ResourceLimits());
+		return new DurabilityServiceImpl(getEnvironment(),
+				getEnvironment().getSPI().zeroDuration(), History(), ResourceLimits());
 	}
 
 	@Override
@@ -139,7 +140,7 @@ public class PolicyFactoryImpl extends PolicyFactory {
 
 	@Override
 	public Lifespan Lifespan() {
-		return new LifespanImpl(getEnvironment(), spi.infiniteDuration());
+		return new LifespanImpl(getEnvironment(), getEnvironment().getSPI().infiniteDuration());
 	}
 
 	@Override
@@ -149,7 +150,8 @@ public class PolicyFactoryImpl extends PolicyFactory {
 
 	@Override
 	public ReaderDataLifecycle ReaderDataLifecycle() {
-		return new ReaderDataLifecycleImpl(getEnvironment(), spi.infiniteDuration(), spi.infiniteDuration());
+		return new ReaderDataLifecycleImpl(getEnvironment(),
+				getEnvironment().getSPI().infiniteDuration(), getEnvironment().getSPI().infiniteDuration());
 	}
 
 	@Override
@@ -174,6 +176,6 @@ public class PolicyFactoryImpl extends PolicyFactory {
 
 	@Override
 	public ServiceEnvironment getEnvironment() {
-		return spi.getEnvironment();
+		return environment;
 	}
 }

@@ -27,7 +27,8 @@ public class SubscriptionMatchedEventImpl<T> extends SubscriptionMatchedEvent<T>
 	 * @param status
 	 * 		The status of the event.
 	 */
-	public SubscriptionMatchedEventImpl(ServiceEnvironment environment, DataReader<T> source, SubscriptionMatchedStatus status) {
+	public SubscriptionMatchedEventImpl(ServiceEnvironment environment, DataReader<T> source,
+										SubscriptionMatchedStatus status) {
 		super(source);
 		this.environment = environment;
 		this.status = status;
@@ -46,7 +47,8 @@ public class SubscriptionMatchedEventImpl<T> extends SubscriptionMatchedEvent<T>
 
 	@Override
 	public SubscriptionMatchedEvent<T> clone() {
-		return new SubscriptionMatchedEventImpl<>(getEnvironment(), getSource(), new SubscriptionMatchedStatusImpl(getStatus()));
+		return new SubscriptionMatchedEventImpl<>(getEnvironment(), getSource(),
+				new SubscriptionMatchedStatusImpl(getStatus()));
 	}
 
 	@Override

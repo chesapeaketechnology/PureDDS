@@ -22,7 +22,8 @@ public class SampleRejectedStatusImpl extends SampleRejectedStatus {
 	 * 		Status to copy.
 	 */
 	public SampleRejectedStatusImpl(SampleRejectedStatus status) {
-		this(status.getEnvironment(), status.getTotalCount(), status.getTotalCountChange(), status.getLastReason(), status.getLastInstanceHandle());
+		this(status.getEnvironment(), status.getTotalCount(), status.getTotalCountChange(),
+				status.getLastReason(), status.getLastInstanceHandle());
 	}
 
 	/**
@@ -37,7 +38,8 @@ public class SampleRejectedStatusImpl extends SampleRejectedStatus {
 	 * @param lastInstanceHandle
 	 * 		Handle to the {@link org.omg.dds.sub.DataReader} that caused the status change.
 	 */
-	public SampleRejectedStatusImpl(ServiceEnvironment environment, int total, int dt, Kind lastReason, InstanceHandle lastInstanceHandle) {
+	public SampleRejectedStatusImpl(ServiceEnvironment environment, int total, int dt, Kind lastReason,
+									InstanceHandle lastInstanceHandle) {
 		this.environment = environment;
 		this.total = total;
 		this.dt = dt;

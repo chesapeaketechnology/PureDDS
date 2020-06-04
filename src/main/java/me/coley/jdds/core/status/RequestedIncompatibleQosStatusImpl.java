@@ -25,14 +25,17 @@ public class RequestedIncompatibleQosStatusImpl extends RequestedIncompatibleQos
 	 * 		Status to copy.
 	 */
 	public RequestedIncompatibleQosStatusImpl(RequestedIncompatibleQosStatus status) {
-		this(status.getEnvironment(), status.getTotalCount(), status.getTotalCountChange(), status.getLastPolicyClass(), status.getPolicies());
+		this(status.getEnvironment(), status.getTotalCount(), status.getTotalCountChange(),
+				status.getLastPolicyClass(), status.getPolicies());
 	}
 
 	/**
 	 * @param environment
 	 * 		Environment context.
 	 * @param total
-	 * 		Cumulative number of times when a {@link org.omg.dds.sub.DataReader} discovered a {@link org.omg.dds.pub.DataWriter} on the same topic that requested a QoS that is incompatible with the writer.
+	 * 		Cumulative number of times when a {@link org.omg.dds.sub.DataReader} discovered
+	 * 		a {@link org.omg.dds.pub.DataWriter} on the same topic that requested a QoS that
+	 * 		is incompatible with the writer.
 	 * @param dt
 	 * 		Difference from last status read.
 	 * @param lastPolicyClass

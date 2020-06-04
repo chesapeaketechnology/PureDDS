@@ -27,7 +27,8 @@ public class RequestedIncompatibleQosEventImpl<T> extends RequestedIncompatibleQ
 	 * @param status
 	 * 		The status of the event.
 	 */
-	public RequestedIncompatibleQosEventImpl(ServiceEnvironment environment, DataReader<T> source, RequestedIncompatibleQosStatus status) {
+	public RequestedIncompatibleQosEventImpl(ServiceEnvironment environment, DataReader<T> source,
+											 RequestedIncompatibleQosStatus status) {
 		super(source);
 		this.environment = environment;
 		this.status = status;
@@ -46,7 +47,8 @@ public class RequestedIncompatibleQosEventImpl<T> extends RequestedIncompatibleQ
 
 	@Override
 	public RequestedIncompatibleQosEvent<T> clone() {
-		return new RequestedIncompatibleQosEventImpl<>(getEnvironment(), getSource(), new RequestedIncompatibleQosStatusImpl(getStatus()));
+		return new RequestedIncompatibleQosEventImpl<>(getEnvironment(), getSource(),
+				new RequestedIncompatibleQosStatusImpl(getStatus()));
 	}
 
 	@Override

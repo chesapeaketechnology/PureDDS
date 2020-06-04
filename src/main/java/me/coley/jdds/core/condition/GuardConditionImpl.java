@@ -1,7 +1,5 @@
 package me.coley.jdds.core.condition;
 
-import me.coley.jdds.core.JServiceEnvironment;
-import me.coley.jdds.core.ServiceProviderImpl;
 import org.omg.dds.core.GuardCondition;
 import org.omg.dds.core.ServiceEnvironment;
 
@@ -11,15 +9,15 @@ import org.omg.dds.core.ServiceEnvironment;
  * @author Matt Coley
  */
 public class GuardConditionImpl extends GuardCondition {
-	private final JServiceEnvironment environment;
+	private final ServiceEnvironment environment;
 	private boolean trigger;
 
 	/**
-	 * @param spi
-	 * 		Spawning provider.
+	 * @param environment
+	 * 		Environment context.
 	 */
-	public GuardConditionImpl(ServiceProviderImpl spi) {
-		this.environment = spi.getEnvironment();
+	public GuardConditionImpl(ServiceEnvironment environment) {
+		this.environment = environment;
 	}
 
 	@Override

@@ -1,13 +1,8 @@
 package me.coley.jdds.domain;
 
-import me.coley.jdds.core.JServiceEnvironment;
 import me.coley.jdds.core.datatype.ModifiableTimeImpl;
 import me.coley.jdds.core.datatype.TimeImpl;
-import org.omg.dds.core.Duration;
-import org.omg.dds.core.InstanceHandle;
-import org.omg.dds.core.ModifiableTime;
-import org.omg.dds.core.StatusCondition;
-import org.omg.dds.core.Time;
+import org.omg.dds.core.*;
 import org.omg.dds.core.status.Status;
 import org.omg.dds.domain.DomainParticipant;
 import org.omg.dds.domain.DomainParticipantListener;
@@ -44,15 +39,15 @@ import java.util.concurrent.TimeoutException;
  * @author Matt Coley
  */
 public class DomainParticipantImpl implements DomainParticipant {
-	private final JServiceEnvironment environment;
+	private final ServiceEnvironment environment;
 	private final InstanceHandle handle;
 	private final int domainId;
 	private boolean enabled;
 	// ignores
-	private Collection<InstanceHandle> ignoredParticipants = new HashSet<>();
-	private Collection<InstanceHandle> ignoredTopics = new HashSet<>();
-	private Collection<InstanceHandle> ignoredPublications = new HashSet<>();
-	private Collection<InstanceHandle> ignoredSubscriptions = new HashSet<>();
+	private final Collection<InstanceHandle> ignoredParticipants = new HashSet<>();
+	private final Collection<InstanceHandle> ignoredTopics = new HashSet<>();
+	private final Collection<InstanceHandle> ignoredPublications = new HashSet<>();
+	private final Collection<InstanceHandle> ignoredSubscriptions = new HashSet<>();
 	// listener
 	private DomainParticipantListener listener;
 	private Collection<Class<? extends Status>> listenerStatuses;
@@ -76,7 +71,7 @@ public class DomainParticipantImpl implements DomainParticipant {
 	 * @param statuses
 	 * 		TODO: Describe
 	 */
-	public DomainParticipantImpl(JServiceEnvironment environment, int domainId, DomainParticipantQos qos,
+	public DomainParticipantImpl(ServiceEnvironment environment, int domainId, DomainParticipantQos qos,
 								 DomainParticipantListener listener, Collection<Class<? extends Status>> statuses) {
 		this.environment = environment;
 		this.handle = environment.getSPI().newInstanceHandle();
@@ -387,7 +382,7 @@ public class DomainParticipantImpl implements DomainParticipant {
 	}
 
 	@Override
-	public JServiceEnvironment getEnvironment() {
+	public ServiceEnvironment getEnvironment() {
 		return environment;
 	}
 

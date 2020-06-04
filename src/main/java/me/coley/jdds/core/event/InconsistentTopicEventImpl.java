@@ -48,7 +48,8 @@ public class InconsistentTopicEventImpl<T> extends InconsistentTopicEvent<T> {
 
 	@Override
 	public InconsistentTopicEvent<T> clone() {
-		return new InconsistentTopicEventImpl<>(getEnvironment(), getSource(), new InconsistentTopicStatusImpl(getStatus()));
+		return new InconsistentTopicEventImpl<>(getEnvironment(), getSource(),
+				new InconsistentTopicStatusImpl(getStatus()));
 	}
 
 	@Override

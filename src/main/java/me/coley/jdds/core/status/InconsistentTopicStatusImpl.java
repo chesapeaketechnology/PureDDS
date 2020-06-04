@@ -26,7 +26,8 @@ public class InconsistentTopicStatusImpl extends InconsistentTopicStatus {
 	 * @param environment
 	 * 		Environment context.
 	 * @param total
-	 * 		Cumulative number of {@link org.omg.dds.topic.Topic}s discovered with names matching the topic this status is attached to, but with an unexpected type.
+	 * 		Cumulative number of {@link org.omg.dds.topic.Topic}s discovered with names
+	 * 		matching the topic this status is attached to, but with an unexpected type.
 	 * @param dt
 	 * 		Difference in inconsistent topics discovered from last status read.
 	 */

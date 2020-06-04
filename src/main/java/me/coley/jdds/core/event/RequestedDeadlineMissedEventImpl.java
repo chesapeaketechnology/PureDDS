@@ -27,7 +27,8 @@ public class RequestedDeadlineMissedEventImpl<T> extends RequestedDeadlineMissed
 	 * @param status
 	 * 		The status of the event.
 	 */
-	public RequestedDeadlineMissedEventImpl(ServiceEnvironment environment, DataReader<T> source, RequestedDeadlineMissedStatus status) {
+	public RequestedDeadlineMissedEventImpl(ServiceEnvironment environment, DataReader<T> source,
+											RequestedDeadlineMissedStatus status) {
 		super(source);
 		this.environment = environment;
 		this.status = status;
@@ -46,7 +47,8 @@ public class RequestedDeadlineMissedEventImpl<T> extends RequestedDeadlineMissed
 
 	@Override
 	public RequestedDeadlineMissedEvent<T> clone() {
-		return new RequestedDeadlineMissedEventImpl<>(getEnvironment(), getSource(), new RequestedDeadlineMissedStatusImpl(getStatus()));
+		return new RequestedDeadlineMissedEventImpl<>(getEnvironment(), getSource(),
+				new RequestedDeadlineMissedStatusImpl(getStatus()));
 	}
 
 	@Override

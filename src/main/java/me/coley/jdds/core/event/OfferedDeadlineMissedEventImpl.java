@@ -26,7 +26,8 @@ public class OfferedDeadlineMissedEventImpl<T> extends OfferedDeadlineMissedEven
 	 * @param status
 	 * 		The status of the event.
 	 */
-	public OfferedDeadlineMissedEventImpl(ServiceEnvironment environment, DataWriter<T> source, OfferedDeadlineMissedStatus status) {
+	public OfferedDeadlineMissedEventImpl(ServiceEnvironment environment, DataWriter<T> source,
+										  OfferedDeadlineMissedStatus status) {
 		super(source);
 		this.environment = environment;
 		this.status = status;

@@ -27,7 +27,8 @@ public class LivelinessChangedEventImpl<T> extends LivelinessChangedEvent<T> {
 	 * @param status
 	 * 		The status of the event.
 	 */
-	public LivelinessChangedEventImpl(ServiceEnvironment environment, DataReader<T> source, LivelinessChangedStatus status) {
+	public LivelinessChangedEventImpl(ServiceEnvironment environment, DataReader<T> source,
+									  LivelinessChangedStatus status) {
 		super(source);
 		this.environment = environment;
 		this.status = status;
@@ -46,7 +47,8 @@ public class LivelinessChangedEventImpl<T> extends LivelinessChangedEvent<T> {
 
 	@Override
 	public LivelinessChangedEvent<T> clone() {
-		return new LivelinessChangedEventImpl<>(getEnvironment(), getSource(), new LivelinessChangedStatusImpl(getStatus()));
+		return new LivelinessChangedEventImpl<>(getEnvironment(), getSource(),
+				new LivelinessChangedStatusImpl(getStatus()));
 	}
 
 	@Override

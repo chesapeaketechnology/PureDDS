@@ -27,7 +27,8 @@ public class OfferedIncompatibleQosEventImpl<T> extends OfferedIncompatibleQosEv
 	 * @param status
 	 * 		The status of the event.
 	 */
-	public OfferedIncompatibleQosEventImpl(ServiceEnvironment environment, DataWriter<T> source, OfferedIncompatibleQosStatus status) {
+	public OfferedIncompatibleQosEventImpl(ServiceEnvironment environment, DataWriter<T> source,
+										   OfferedIncompatibleQosStatus status) {
 		super(source);
 		this.environment = environment;
 		this.status = status;
@@ -46,7 +47,8 @@ public class OfferedIncompatibleQosEventImpl<T> extends OfferedIncompatibleQosEv
 
 	@Override
 	public OfferedIncompatibleQosEvent<T> clone() {
-		return new OfferedIncompatibleQosEventImpl<>(getEnvironment(), getSource(), new OfferedIncompatibleQosStatusImpl(getStatus()));
+		return new OfferedIncompatibleQosEventImpl<>(getEnvironment(), getSource(),
+				new OfferedIncompatibleQosStatusImpl(getStatus()));
 	}
 
 	@Override

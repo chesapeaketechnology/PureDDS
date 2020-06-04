@@ -28,6 +28,8 @@ import org.omg.dds.type.builtin.KeyedString;
 import org.omg.dds.type.dynamic.DynamicDataFactory;
 import org.omg.dds.type.dynamic.DynamicTypeFactory;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -41,7 +43,7 @@ import static me.coley.jdds.util.MiscUtil.emptyString;
  */
 public class ServiceProviderImpl implements ServiceEnvironment.ServiceProviderInterface {
 	private final JServiceEnvironment environment;
-	private final PolicyFactoryImpl policyFactory = new PolicyFactoryImpl(this);
+	private final PolicyFactoryImpl policyFactory = new PolicyFactoryImpl(getEnvironment());
 
 	/**
 	 * Create a new service provider.
@@ -55,7 +57,7 @@ public class ServiceProviderImpl implements ServiceEnvironment.ServiceProviderIn
 
 	@Override
 	public DomainParticipantFactory getParticipantFactory() {
-		return new DomainParticipantFactoryImpl(this);
+		return new DomainParticipantFactoryImpl(getEnvironment());
 	}
 
 	@Override
@@ -95,40 +97,40 @@ public class ServiceProviderImpl implements ServiceEnvironment.ServiceProviderIn
 
 	@Override
 	public InstanceHandleImpl newInstanceHandle() {
-		return new InstanceHandleImpl(this);
+		return new InstanceHandleImpl(getEnvironment());
 	}
 
 	@Override
 	public InstanceHandle nilHandle() {
-		return new ImmutableInstanceHandleImpl(this, null);
+		return new ImmutableInstanceHandleImpl(getEnvironment(), null);
 	}
 
 	@Override
 	public GuardCondition newGuardCondition() {
-		return new GuardConditionImpl(this);
+		return new GuardConditionImpl(getEnvironment());
 	}
 
 	@Override
 	public WaitSet newWaitSet() {
-		return new WaitSetImpl(this);
+		return new WaitSetImpl(getEnvironment());
 	}
 
 	@Override
 	public Set<Class<? extends Status>> allStatusKinds() {
-		// TODO: Status?
-		return null;
+		// DOCS: Is this correct? There is no documentation for this method
+		return new HashSet<>(Implementations.getAllStatuses());
 	}
 
 	@Override
 	public Set<Class<? extends Status>> noStatusKinds() {
-		// TODO: Status?
-		return null;
+		// DOCS: Is this correct? There is no documentation for this method
+		return Collections.emptySet();
 	}
 
 	@Override
 	public QosProvider newQosProvider(String uri, String profile) {
 		// TODO: QoS system?
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -139,7 +141,7 @@ public class ServiceProviderImpl implements ServiceEnvironment.ServiceProviderIn
 	@Override
 	public DynamicDataFactory getDynamicDataFactory() {
 		// TODO: Dynamic data factory
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

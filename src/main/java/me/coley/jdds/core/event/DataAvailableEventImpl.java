@@ -26,7 +26,8 @@ public class DataAvailableEventImpl<T> extends DataAvailableEvent<T> {
 	 * @param status
 	 * 		The status of the event.
 	 */
-	public DataAvailableEventImpl(ServiceEnvironment environment, DataReader<T> source, DataAvailableStatusImpl status) {
+	public DataAvailableEventImpl(ServiceEnvironment environment, DataReader<T> source,
+								  DataAvailableStatusImpl status) {
 		super(source);
 		this.environment = environment;
 		this.status = status;

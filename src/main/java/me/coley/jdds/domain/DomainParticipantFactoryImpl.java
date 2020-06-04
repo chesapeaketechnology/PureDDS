@@ -1,7 +1,7 @@
 package me.coley.jdds.domain;
 
 import me.coley.jdds.core.JServiceEnvironment;
-import me.coley.jdds.core.ServiceProviderImpl;
+import org.omg.dds.core.ServiceEnvironment;
 import org.omg.dds.core.status.Status;
 import org.omg.dds.domain.DomainParticipant;
 import org.omg.dds.domain.DomainParticipantFactory;
@@ -20,7 +20,7 @@ import java.util.Map;
  * @author Matt Coley
  */
 public class DomainParticipantFactoryImpl extends DomainParticipantFactory {
-	private final ServiceProviderImpl spi;
+	private final ServiceEnvironment environment;
 	private final Map<Integer, DomainParticipant> participantMap = new HashMap<>();
 	private final int defaultDomain;
 	private DomainParticipantFactoryQos qos;
@@ -29,32 +29,32 @@ public class DomainParticipantFactoryImpl extends DomainParticipantFactory {
 	/**
 	 * Create a factory with default options.
 	 *
-	 * @param spi
-	 * 		Spawning provider that created the factory.
+	 * @param environment
+	 * 		Environment context.
 	 */
-	public DomainParticipantFactoryImpl(ServiceProviderImpl spi) {
-		this(spi,
-				spi.getEnvironment().getConfigurator().getDefaultDomainParticipantFactoryQos(),
-				spi.getEnvironment().getConfigurator().getDefaultDomainParticipantQos(),
-				spi.getEnvironment().getConfigurator().getDefaultDomain());
+	public DomainParticipantFactoryImpl(JServiceEnvironment environment) {
+		this(environment,
+				environment.getConfigurator().getDefaultDomainParticipantFactoryQos(),
+				environment.getConfigurator().getDefaultDomainParticipantQos(),
+				environment.getConfigurator().getDefaultDomain());
 	}
 
 	/**
 	 * Create a factory with the given configurations.
 	 *
-	 * @param spi
-	 * 		Spawning provider that created the factory.
+	 * @param environment
+	 * 		Environment context.
 	 * @param qos
 	 * 		Quality of service for the factory.
 	 * @param defaultDomainParticipantQos
 	 * 		Quality of service for generated participants.
 	 * @param defaultDomain The default domain.
 	 */
-	public DomainParticipantFactoryImpl(ServiceProviderImpl spi,
+	public DomainParticipantFactoryImpl(ServiceEnvironment environment,
 										DomainParticipantFactoryQos qos,
 										DomainParticipantQos defaultDomainParticipantQos,
 										int defaultDomain) {
-		this.spi = spi;
+		this.environment = environment;
 		this.qos = qos;
 		this.defaultParticipantQos = defaultDomainParticipantQos;
 		this.defaultDomain = defaultDomain;
@@ -108,7 +108,7 @@ public class DomainParticipantFactoryImpl extends DomainParticipantFactory {
 	}
 
 	@Override
-	public JServiceEnvironment getEnvironment() {
-		return spi.getEnvironment();
+	public ServiceEnvironment getEnvironment() {
+		return environment;
 	}
 }

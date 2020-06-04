@@ -21,20 +21,23 @@ public class OfferedDeadlineMissedStatusImpl extends OfferedDeadlineMissedStatus
 	 * 		Status to copy.
 	 */
 	public OfferedDeadlineMissedStatusImpl(OfferedDeadlineMissedStatus status) {
-		this(status.getEnvironment(), status.getTotalCount(), status.getTotalCountChange(), status.getLastInstanceHandle());
+		this(status.getEnvironment(), status.getTotalCount(), status.getTotalCountChange(),
+				status.getLastInstanceHandle());
 	}
 
 	/**
 	 * @param environment
 	 * 		Environment context.
 	 * @param total
-	 * 		Cumulative number of missed deadlines where the {@link org.omg.dds.pub.DataWriter} failed to provide data.
+	 * 		Cumulative number of missed deadlines where the {@link org.omg.dds.pub.DataWriter}
+	 * 		failed to provide data.
 	 * @param dt
 	 * 		Difference from last status read.
 	 * @param lastInstanceHandle
 	 * 		Handle to the {@link org.omg.dds.pub.DataWriter} that missed the deadline.
 	 */
-	public OfferedDeadlineMissedStatusImpl(ServiceEnvironment environment, int total, int dt, InstanceHandle lastInstanceHandle) {
+	public OfferedDeadlineMissedStatusImpl(ServiceEnvironment environment, int total, int dt,
+										   InstanceHandle lastInstanceHandle) {
 		this.environment = environment;
 		this.total = total;
 		this.dt = dt;

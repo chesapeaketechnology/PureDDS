@@ -31,7 +31,8 @@ public class PublicationMatchedStatusImpl extends PublicationMatchedStatus {
 	 * @param environment
 	 * 		Environment context.
 	 * @param total
-	 * 		Cumulative number of times when a {@link org.omg.dds.pub.DataWriter} discovered a {@link org.omg.dds.sub.DataReader} that matched successfully.
+	 * 		Cumulative number of times when a {@link org.omg.dds.pub.DataWriter} discovered
+	 * 		a {@link org.omg.dds.sub.DataReader} that matched successfully.
 	 * @param dt
 	 * 		Difference in total from last status read.
 	 * @param current
@@ -41,7 +42,8 @@ public class PublicationMatchedStatusImpl extends PublicationMatchedStatus {
 	 * @param lastSubscriptionHandle
 	 * 		Handle to the {@link org.omg.dds.pub.DataWriter} that caused the status change.
 	 */
-	public PublicationMatchedStatusImpl(ServiceEnvironment environment, int total, int dt, int current, int dc, InstanceHandle lastSubscriptionHandle) {
+	public PublicationMatchedStatusImpl(ServiceEnvironment environment, int total, int dt, int current, int dc,
+										InstanceHandle lastSubscriptionHandle) {
 		this.environment = environment;
 		this.total = total;
 		this.dt = dt;

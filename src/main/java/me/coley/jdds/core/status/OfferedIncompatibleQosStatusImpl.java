@@ -33,7 +33,9 @@ public class OfferedIncompatibleQosStatusImpl extends OfferedIncompatibleQosStat
 	 * @param environment
 	 * 		Environment context.
 	 * @param total
-	 * 		Cumulative number of times when a {@link org.omg.dds.pub.DataWriter} discovered a {@link org.omg.dds.sub.DataReader} on the same topic that requested a QoS that is incompatible with the writer.
+	 * 		Cumulative number of times when a {@link org.omg.dds.pub.DataWriter}
+	 * 		discovered a {@link org.omg.dds.sub.DataReader} on the same topic that requested a QoS
+	 * 		that is incompatible with the writer.
 	 * @param dt
 	 * 		Difference from last status read.
 	 * @param lastPolicyClass

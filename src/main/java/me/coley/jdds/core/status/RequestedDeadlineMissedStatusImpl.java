@@ -21,20 +21,23 @@ public class RequestedDeadlineMissedStatusImpl extends RequestedDeadlineMissedSt
 	 * 		Status to copy.
 	 */
 	public RequestedDeadlineMissedStatusImpl(RequestedDeadlineMissedStatus status) {
-		this(status.getEnvironment(), status.getTotalCount(), status.getTotalCountChange(), status.getLastInstanceHandle());
+		this(status.getEnvironment(), status.getTotalCount(), status.getTotalCountChange(),
+				status.getLastInstanceHandle());
 	}
 
 	/**
 	 * @param environment
 	 * 		Environment context.
 	 * @param total
-	 * 		Cumulative number of missed deadlines detected for any instance read by the {@link org.omg.dds.sub.DataReader}.
+	 * 		Cumulative number of missed deadlines detected for any
+	 * 		instance read by the {@link org.omg.dds.sub.DataReader}.
 	 * @param dt
 	 * 		Difference from last status read.
 	 * @param lastInstanceHandle
 	 * 		Handle to the {@link org.omg.dds.sub.DataReader} that caused the status change.
 	 */
-	public RequestedDeadlineMissedStatusImpl(ServiceEnvironment environment, int total, int dt, InstanceHandle lastInstanceHandle) {
+	public RequestedDeadlineMissedStatusImpl(ServiceEnvironment environment, int total, int dt,
+											 InstanceHandle lastInstanceHandle) {
 		this.environment = environment;
 		this.total = total;
 		this.dt = dt;

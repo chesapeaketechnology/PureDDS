@@ -17,6 +17,10 @@ public class QosPolicyCountImpl extends AbstractPolicy implements QosPolicyCount
 	/**
 	 * @param environment
 	 * 		Environment context.
+	 * @param policyClass
+	 * 		Class of the polcy.
+	 * @param count
+	 * 		Number of instances.
 	 */
 	public QosPolicyCountImpl(ServiceEnvironment environment, Class<? extends QosPolicy> policyClass, int count) {
 		super(environment);
