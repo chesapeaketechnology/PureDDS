@@ -27,16 +27,20 @@ import java.util.Set;
  */
 public class TopicImpl<T> implements Topic<T> {
 	private final ServiceEnvironment environment;
+	private final DomainParticipant parent;
 	private final InstanceHandle handle;
 	private final String name;
 	private final TypeSupport<T> type;
-	private TopicListener<T> listener;
-	private boolean enabled;
+	private TopicListener<T> listener; // TODO: Use listener
+	private Collection<Class<? extends Status>> listenerStatuses;
+	private boolean enabled; // TODO: Check with this
 	private TopicQos qos;
 
 	/**
 	 * @param environment
 	 * 		Environment context.
+	 * @param parent
+	 * 		Domain participant that this topic belongs to.
 	 * @param name
 	 * 		Topic name.
 	 * @param type
@@ -48,14 +52,16 @@ public class TopicImpl<T> implements Topic<T> {
 	 * @param statuses
 	 * 		Status filter mask for the listener.
 	 */
-	public TopicImpl(ServiceEnvironment environment, String name, Class<T> type, TopicQos qos,
+	public TopicImpl(ServiceEnvironment environment, DomainParticipant parent, String name, Class<T> type, TopicQos qos,
 					 TopicListener<T> listener, Collection<Class<? extends Status>> statuses) {
-		this(environment, name, TypeSupport.newTypeSupport(type, environment), qos, listener, statuses);
+		this(environment, parent, name, TypeSupport.newTypeSupport(type, environment), qos, listener, statuses);
 	}
 
 	/**
 	 * @param environment
 	 * 		Environment context.
+	 * @param parent
+	 * 		Domain participant that this topic belongs to.
 	 * @param name
 	 * 		Topic name.
 	 * @param type
@@ -67,9 +73,10 @@ public class TopicImpl<T> implements Topic<T> {
 	 * @param statuses
 	 * 		Status filter mask for the listener.
 	 */
-	public TopicImpl(ServiceEnvironment environment, String name, TypeSupport<T> type, TopicQos qos,
+	public TopicImpl(ServiceEnvironment environment, DomainParticipant parent, String name, TypeSupport<T> type, TopicQos qos,
 					 TopicListener<T> listener, Collection<Class<? extends Status>> statuses) {
 		this.environment = environment;
+		this.parent = parent;
 		this.name = name;
 		this.type = type;
 		this.qos = qos;
@@ -96,7 +103,7 @@ public class TopicImpl<T> implements Topic<T> {
 	@Override
 	public void setListener(TopicListener<T> listener, Collection<Class<? extends Status>> statuses) {
 		this.listener = listener;
-		// TODO: set listener status filter
+		this.listenerStatuses = statuses;
 	}
 
 	@Override
@@ -118,13 +125,15 @@ public class TopicImpl<T> implements Topic<T> {
 
 	@Override
 	public StatusCondition<Topic<T>> getStatusCondition() {
-		// TODO: What to do here?
+		// TODO: Use as a getter for the "org.omg.dds.core.StatusCondition"
+		//  - Maybe have a sort of Environment-level "ConditionCache" that has a map of handles to conditions statuses
+		//    - This will allow easily adding all condition tracking logic to an interface and adding to all those that need it
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Set<Class<? extends Status>> getStatusChanges() {
-		// TODO: What to do here?
+		// TODO: track statuses and see which change between each call of this method
 		throw new UnsupportedOperationException();
 	}
 
@@ -139,9 +148,10 @@ public class TopicImpl<T> implements Topic<T> {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public <X> TopicDescription<X> cast() {
-		// TODO: Casting
-		throw new UnsupportedOperationException();
+		// DOCS: There's no way to know what X is... so I can't think of what else they would expect aside from this...
+		return (TopicDescription<X>) this;
 	}
 
 	@Override
@@ -156,8 +166,7 @@ public class TopicImpl<T> implements Topic<T> {
 
 	@Override
 	public DomainParticipant getParent() {
-		// TODO: When is there a parent?
-		throw new UnsupportedOperationException();
+		return parent;
 	}
 
 	@Override
@@ -176,6 +185,8 @@ public class TopicImpl<T> implements Topic<T> {
 		// TODO: What to do here?
 		//  - Need to mark as closed, then check in other methods if actions are legal
 		//  - If action done on closed topic, must throw "AlreadyClosedException"
+		//  - When there are readers/writers
+		//    - Fail if they are still active
 	}
 
 	@Override

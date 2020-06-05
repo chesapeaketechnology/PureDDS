@@ -32,8 +32,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-// TODO: Most of this class
-
 /**
  * Domain participant implementation.
  *
@@ -45,12 +43,13 @@ public class DomainParticipantImpl implements DomainParticipant {
 	private final int domainId;
 	private boolean enabled;
 	// ignores
+	// TODO: Use these ignore items
 	private final Collection<InstanceHandle> ignoredParticipants = new HashSet<>();
 	private final Collection<InstanceHandle> ignoredTopics = new HashSet<>();
 	private final Collection<InstanceHandle> ignoredPublications = new HashSet<>();
 	private final Collection<InstanceHandle> ignoredSubscriptions = new HashSet<>();
 	// listener
-	private DomainParticipantListener listener;
+	private DomainParticipantListener listener; // TODO: Use this
 	private Collection<Class<? extends Status>> listenerStatuses;
 	// qos
 	private DomainParticipantQos qos;
@@ -104,6 +103,8 @@ public class DomainParticipantImpl implements DomainParticipant {
 
 		// Participant must be enabled
 
+		// What is the difference between "closed" and "!enabled"?
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -139,7 +140,7 @@ public class DomainParticipantImpl implements DomainParticipant {
 	@Override
 	public <T> Topic<T> createTopic(String topicName, Class<T> type, TopicQos qos, TopicListener<T> listener,
 									Collection<Class<? extends Status>> statuses) {
-		Topic<T> topic = new TopicImpl<>(getEnvironment(), topicName, type, qos, listener, statuses);
+		Topic<T> topic = new TopicImpl<>(getEnvironment(), this, topicName, type, qos, listener, statuses);
 		discoveredTopics.add(topic.getInstanceHandle());
 		return topic;
 	}
@@ -152,7 +153,7 @@ public class DomainParticipantImpl implements DomainParticipant {
 	@Override
 	public <T> Topic<T> createTopic(String topicName, TypeSupport<T> type, TopicQos qos, TopicListener<T> listener,
 									Collection<Class<? extends Status>> statuses) {
-		Topic<T> topic = new TopicImpl<>(getEnvironment(), topicName, type, qos, listener, statuses);
+		Topic<T> topic = new TopicImpl<>(getEnvironment(), this, topicName, type, qos, listener, statuses);
 		discoveredTopics.add(topic.getInstanceHandle());
 		return topic;
 	}
@@ -369,13 +370,15 @@ public class DomainParticipantImpl implements DomainParticipant {
 
 	@Override
 	public StatusCondition<DomainParticipant> getStatusCondition() {
-		// TODO: What do here?
+		// TODO: Use as a getter for the "org.omg.dds.core.StatusCondition"
+		//  - Maybe have a sort of Environment-level "ConditionCache" that has a map of handles to conditions statuses
+		//    - This will allow easily adding all condition tracking logic to an interface and adding to all those that need it
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Set<Class<? extends Status>> getStatusChanges() {
-		// TODO: What do here?
+		// TODO: track statuses and see which change between each call of this method
 		throw new UnsupportedOperationException();
 	}
 
