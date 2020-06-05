@@ -104,7 +104,7 @@ public class DomainParticipantImpl implements DomainParticipant {
 
 		// Participant must be enabled
 
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -122,13 +122,13 @@ public class DomainParticipantImpl implements DomainParticipant {
 									   Collection<Class<? extends Status>> statuses) {
 		// TODO: Subscriber
 		//  - And record with entity handle
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Subscriber getBuiltinSubscriber() {
 		// TODO: Build-in subscriber
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -168,7 +168,7 @@ public class DomainParticipantImpl implements DomainParticipant {
 										  Collection<Class<? extends Status>> statuses) {
 		// TODO: Create topic dynamic
 		//  - And record with entity handle
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -182,7 +182,7 @@ public class DomainParticipantImpl implements DomainParticipant {
 										  Collection<Class<? extends Status>> statuses) {
 		// TODO: Create topic dynamic
 		//  - And record with entity handle
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -191,7 +191,7 @@ public class DomainParticipantImpl implements DomainParticipant {
 																  List<String> expressionParameters) {
 		// TODO: Create topic: filtered-content
 		//  - And record with entity handle
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -199,7 +199,7 @@ public class DomainParticipantImpl implements DomainParticipant {
 											  List<String> expressionParameters) {
 		// TODO Create topic: multi
 		//  - And record with entity handle
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -207,7 +207,7 @@ public class DomainParticipantImpl implements DomainParticipant {
 											  List<String> expressionParameters) {
 		// TODO Create topic: multi
 		//  - And record with entity handle
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -218,13 +218,13 @@ public class DomainParticipantImpl implements DomainParticipant {
 	@Override
 	public <T> Topic<T> findTopic(String topicName, long timeout, TimeUnit unit) throws TimeoutException {
 		// TODO: Find topic
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public <T> TopicDescription<T> lookupTopicDescription(String name) {
 		// TODO: Find topic description
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -321,7 +321,7 @@ public class DomainParticipantImpl implements DomainParticipant {
 	@Override
 	public ParticipantBuiltinTopicData getDiscoveredParticipantData(InstanceHandle participantHandle) {
 		// TODO: Record discovered participants
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -332,13 +332,13 @@ public class DomainParticipantImpl implements DomainParticipant {
 	@Override
 	public TopicBuiltinTopicData getDiscoveredTopicData(InstanceHandle topicHandle) {
 		// TODO: Record discovered topics
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean containsEntity(InstanceHandle handle) {
 		// TODO: Record discovered entities
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -370,13 +370,13 @@ public class DomainParticipantImpl implements DomainParticipant {
 	@Override
 	public StatusCondition<DomainParticipant> getStatusCondition() {
 		// TODO: What do here?
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Set<Class<? extends Status>> getStatusChanges() {
 		// TODO: What do here?
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

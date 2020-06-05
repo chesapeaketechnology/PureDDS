@@ -80,7 +80,7 @@ public class TopicImpl<T> implements Topic<T> {
 	@Override
 	public InconsistentTopicStatus getInconsistentTopicStatus() {
 		// TODO: What to do here?
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -119,13 +119,13 @@ public class TopicImpl<T> implements Topic<T> {
 	@Override
 	public StatusCondition<Topic<T>> getStatusCondition() {
 		// TODO: What to do here?
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Set<Class<? extends Status>> getStatusChanges() {
 		// TODO: What to do here?
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -141,7 +141,7 @@ public class TopicImpl<T> implements Topic<T> {
 	@Override
 	public <X> TopicDescription<X> cast() {
 		// TODO: Casting
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -157,7 +157,7 @@ public class TopicImpl<T> implements Topic<T> {
 	@Override
 	public DomainParticipant getParent() {
 		// TODO: When is there a parent?
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

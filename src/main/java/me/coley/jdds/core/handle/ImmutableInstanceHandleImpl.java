@@ -30,7 +30,7 @@ public final class ImmutableInstanceHandleImpl extends InstanceHandle implements
 
 	@Override
 	public ModifiableInstanceHandle modifiableCopy() {
-		return null;
+		return new InstanceHandleImpl(getEnvironment()).withEntity(getEntity());
 	}
 
 	@Override

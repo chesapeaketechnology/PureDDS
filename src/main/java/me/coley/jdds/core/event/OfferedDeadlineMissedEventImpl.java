@@ -1,5 +1,6 @@
 package me.coley.jdds.core.event;
 
+import me.coley.jdds.core.status.OfferedDeadlineMissedStatusImpl;
 import org.omg.dds.core.ServiceEnvironment;
 import org.omg.dds.core.event.OfferedDeadlineMissedEvent;
 import org.omg.dds.core.status.OfferedDeadlineMissedStatus;
@@ -46,7 +47,7 @@ public class OfferedDeadlineMissedEventImpl<T> extends OfferedDeadlineMissedEven
 
 	@Override
 	public OfferedDeadlineMissedEvent<T> clone() {
-		return null;
+		return new OfferedDeadlineMissedEventImpl<>(getEnvironment(), getSource(), new OfferedDeadlineMissedStatusImpl(getStatus()));
 	}
 
 	@Override

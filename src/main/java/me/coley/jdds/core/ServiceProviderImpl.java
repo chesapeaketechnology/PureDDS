@@ -62,12 +62,14 @@ public class ServiceProviderImpl implements ServiceEnvironment.ServiceProviderIn
 
 	@Override
 	public DynamicTypeFactory getTypeFactory() {
-		return null;
+		// TODO: Dynamic type support
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public <T> TypeSupport<T> newTypeSupport(Class<T> type, String registeredName) {
-		return null;
+		// TODO: Normal type support
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
