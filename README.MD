@@ -1,4 +1,4 @@
-# JDDS
+# PureDDS
 
 An open source DDS implementation written completely in Java.
 
