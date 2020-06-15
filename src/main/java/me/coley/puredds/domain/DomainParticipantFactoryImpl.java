@@ -1,6 +1,5 @@
 package me.coley.puredds.domain;
 
-import me.coley.puredds.core.PureServiceEnvironment;
 import org.omg.dds.core.ServiceEnvironment;
 import org.omg.dds.core.status.Status;
 import org.omg.dds.domain.DomainParticipant;
@@ -13,6 +12,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import static me.coley.puredds.config.Configurator.getConfigurator;
 
 /**
  * Factory implementation for domain participants.
@@ -32,11 +33,11 @@ public class DomainParticipantFactoryImpl extends DomainParticipantFactory {
 	 * @param environment
 	 * 		Environment context.
 	 */
-	public DomainParticipantFactoryImpl(PureServiceEnvironment environment) {
+	public DomainParticipantFactoryImpl(ServiceEnvironment environment) {
 		this(environment,
-				environment.getConfigurator().getDefaultDomainParticipantFactoryQos(),
-				environment.getConfigurator().getDefaultDomainParticipantQos(),
-				environment.getConfigurator().getDefaultDomain());
+				getConfigurator(environment).getDefaultDomainParticipantFactoryQos(),
+				getConfigurator(environment).getDefaultDomainParticipantQos(),
+				getConfigurator(environment).getDefaultDomain());
 	}
 
 	/**

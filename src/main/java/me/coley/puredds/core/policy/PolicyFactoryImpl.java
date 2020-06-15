@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
+import static me.coley.puredds.config.Configurator.getConfigurator;
 import static me.coley.puredds.util.MiscUtil.emptyBytes;
 
 /**
@@ -41,7 +42,7 @@ public class PolicyFactoryImpl extends PolicyFactory {
 	private static final int DEFAULT_HISTORY_DEPTH = 1;
 	private static final int DEFAULT_TRANSPORT_PRIORITY = 0;
 	private static final int DEFAULT_OWNERSHIP_STRENGTH = 0;
-	private static Duration defaultReliabilityDelay;
+	private static Duration defaultReliabilityBlockingMs;
 	private final ServiceEnvironment environment;
 
 	/**
@@ -50,8 +51,7 @@ public class PolicyFactoryImpl extends PolicyFactory {
 	 */
 	public PolicyFactoryImpl(ServiceEnvironment environment) {
 		this.environment = environment;
-		// TODO: Refactor these defaults into the configurator
-		defaultReliabilityDelay = environment.getSPI().newDuration(100000000, TimeUnit.NANOSECONDS);
+		defaultReliabilityBlockingMs = environment.getSPI().newDuration(getConfigurator(environment).getDefaultReliabilityBlockingMs(), TimeUnit.MILLISECONDS);
 	}
 
 	@Override
@@ -130,7 +130,7 @@ public class PolicyFactoryImpl extends PolicyFactory {
 
 	@Override
 	public Reliability Reliability() {
-		return new ReliabilityImpl(getEnvironment(), Reliability.Kind.BEST_EFFORT, defaultReliabilityDelay);
+		return new ReliabilityImpl(getEnvironment(), Reliability.Kind.BEST_EFFORT, defaultReliabilityBlockingMs);
 	}
 
 	@Override
