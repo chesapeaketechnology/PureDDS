@@ -13,9 +13,9 @@ import org.omg.dds.core.status.LivelinessChangedStatus;
 public class LivelinessChangedStatusImpl extends LivelinessChangedStatus {
 	private final ServiceEnvironment environment;
 	private final int aliveCount;
-	private final int notAliveCount;
 	private final int aliveCountDx;
-	private final int notAlivecountDx;
+	private final int deadCount;
+	private final int deadCountDx;
 	private final InstanceHandle lastPublicationHandle;
 
 	/**
@@ -32,26 +32,26 @@ public class LivelinessChangedStatusImpl extends LivelinessChangedStatus {
 	 * 		Environment context.
 	 * @param aliveCount
 	 * 		Number of alive {@link org.omg.dds.pub.DataWriter} instances.
-	 * @param notAliveCount
+	 * @param deadCount
 	 * 		Number of dead {@link org.omg.dds.pub.DataWriter} instances.
 	 * @param aliveCountDx
 	 * 		Difference from last status read.
-	 * @param notAlivecountDx
+	 * @param deadCountDx
 	 * 		Difference from last status read.
 	 * @param lastPublicationHandle
 	 * 		Handle to the {@link org.omg.dds.pub.DataWriter} that caused the status change.
 	 */
 	public LivelinessChangedStatusImpl(ServiceEnvironment environment,
 									   int aliveCount,
-									   int notAliveCount,
+									   int deadCount,
 									   int aliveCountDx,
-									   int notAlivecountDx,
+									   int deadCountDx,
 									   InstanceHandle lastPublicationHandle) {
 		this.environment = environment;
 		this.aliveCount = aliveCount;
-		this.notAliveCount = notAliveCount;
+		this.deadCount = deadCount;
 		this.aliveCountDx = aliveCountDx;
-		this.notAlivecountDx = notAlivecountDx;
+		this.deadCountDx = deadCountDx;
 		this.lastPublicationHandle = lastPublicationHandle;
 	}
 
@@ -62,7 +62,7 @@ public class LivelinessChangedStatusImpl extends LivelinessChangedStatus {
 
 	@Override
 	public int getNotAliveCount() {
-		return notAliveCount;
+		return deadCount;
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class LivelinessChangedStatusImpl extends LivelinessChangedStatus {
 
 	@Override
 	public int getNotAliveCountChange() {
-		return notAlivecountDx;
+		return deadCountDx;
 	}
 
 	@Override

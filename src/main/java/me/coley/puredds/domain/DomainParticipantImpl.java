@@ -2,6 +2,7 @@ package me.coley.puredds.domain;
 
 import me.coley.puredds.core.datatype.ModifiableTimeImpl;
 import me.coley.puredds.core.datatype.TimeImpl;
+import me.coley.puredds.sub.SubscriberImpl;
 import me.coley.puredds.topic.TopicImpl;
 import org.omg.dds.core.*;
 import org.omg.dds.core.status.Status;
@@ -58,6 +59,7 @@ public class DomainParticipantImpl implements DomainParticipant {
 	private TopicQos defaultTopicQos;
 	private Set<InstanceHandle> discoveredTopics;
 	private Set<InstanceHandle> discoveredParticipants;
+	private Set<Subscriber> subscribers;
 
 	/**
 	 * Create the participant.
@@ -121,9 +123,9 @@ public class DomainParticipantImpl implements DomainParticipant {
 	@Override
 	public Subscriber createSubscriber(SubscriberQos qos, SubscriberListener listener,
 									   Collection<Class<? extends Status>> statuses) {
-		// TODO: Subscriber
-		//  - And record with entity handle
-		throw new UnsupportedOperationException();
+		Subscriber subscriber = new SubscriberImpl(getEnvironment(), this, qos, listener, statuses);
+		subscribers.add(subscriber);
+		return subscriber;
 	}
 
 	@Override
