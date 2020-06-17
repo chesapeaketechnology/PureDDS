@@ -1,18 +1,11 @@
 package me.coley.puredds.sub;
 
-import me.coley.puredds.core.handle.InstanceHandleImpl;
-import me.coley.puredds.core.status.LivelinessChangedStatusImpl;
-import me.coley.puredds.core.status.RequestedDeadlineMissedStatusImpl;
-import me.coley.puredds.core.status.RequestedIncompatibleQosStatusImpl;
-import me.coley.puredds.core.status.SampleLostStatusImpl;
-import me.coley.puredds.core.status.SampleRejectedStatusImpl;
-import me.coley.puredds.core.status.SubscriptionMatchedStatusImpl;
+import me.coley.puredds.core.EntityBase;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.InstanceHandle;
 import org.omg.dds.core.ModifiableInstanceHandle;
 import org.omg.dds.core.QosProvider;
 import org.omg.dds.core.ServiceEnvironment;
-import org.omg.dds.core.StatusCondition;
 import org.omg.dds.core.status.LivelinessChangedStatus;
 import org.omg.dds.core.status.RequestedDeadlineMissedStatus;
 import org.omg.dds.core.status.RequestedIncompatibleQosStatus;
@@ -46,16 +39,11 @@ import java.util.concurrent.TimeoutException;
  *
  * @author Matt Coley
  */
-public class DataReaderImpl<T> implements DataReader<T> {
-	private final InstanceHandle handle = new InstanceHandleImpl(getEnvironment());
-	private final ServiceEnvironment environment;
+public class DataReaderImpl<T> extends EntityBase<DataReader<T>, DataReaderListener<T>, DataReaderQos>
+		implements DataReader<T> {
 	private final Subscriber parent;
 	private final TopicDescription<T> topic;
-	private DataReaderQos qos;
-	private DataReaderListener<T> listener;
-	private Collection<Class<? extends Status>> listenerStatuses;
-	private boolean enabled; // TODO: Check with this
-	private boolean closed; // TODO: Check with this
+	private final List<ReadCondition<T>> conditions = new ArrayList<>();
 
 	/**
 	 * @param environment
@@ -74,29 +62,25 @@ public class DataReaderImpl<T> implements DataReader<T> {
 	public DataReaderImpl(ServiceEnvironment environment, Subscriber parent, TopicDescription<T> topic,
 						  DataReaderQos qos, DataReaderListener<T> listener,
 						  Collection<Class<? extends Status>> listenerStatuses) {
-		this.environment = environment;
+		super(environment);
 		this.parent = parent;
 		this.topic = topic;
-		this.qos = qos;
-		this.listener = listener;
-		this.listenerStatuses = listenerStatuses;
-	}
-
-	@Override
-	public void enable() {
-		this.enabled = true;
+		setQos(qos);
+		setListener(listener, listenerStatuses);
 	}
 
 	@Override
 	public void closeContainedEntities() {
-		// TODO: Close created entities
-		//  - conditions
+		conditions.forEach(ReadCondition::close);
+		conditions.clear();
 	}
 
 	@Override
 	public void close() {
-		this.enabled = false;
-		this.closed = true;
+		super.close();
+		// TODO: Additional work on closure
+		// "A DataReader cannot be closed if it has any outstanding loans as a result of
+		//  a call to DataReader.read(), DataReader.take(), or one of the variants thereof."
 	}
 
 	@Override
@@ -117,21 +101,23 @@ public class DataReaderImpl<T> implements DataReader<T> {
 
 	@Override
 	public ReadCondition<T> createReadCondition(Subscriber.DataState states) {
-		return createQueryCondition(states, null, null);
+		ReadCondition<T> condition = new ReadConditionImpl<>(getEnvironment(), this, states);
+		conditions.add(condition);
+		return condition;
 	}
 
 	@Override
 	public QueryCondition<T> createQueryCondition(String queryExpression, List<String> queryParameters) {
-		return createQueryCondition(null, queryExpression, queryParameters);
+		return createQueryCondition(getParent().createDataState(), queryExpression, queryParameters);
 	}
 
 	@Override
-	public QueryCondition<T> createQueryCondition(Subscriber.DataState states, String queryExpression, List<String> queryParameters) {
-		// TODO: Create query condition. Possible cases:
-		//  [states]
-		//  [states, query]
-		//  [query]
-		throw new UnsupportedOperationException();
+	public QueryCondition<T> createQueryCondition(Subscriber.DataState states, String queryExpression,
+												  List<String> queryParameters) {
+		QueryCondition<T> condition =
+				new QueryConditionImpl<>(getEnvironment(), this, states, queryExpression, queryParameters);
+		conditions.add(condition);
+		return condition;
 	}
 
 	@Override
@@ -343,37 +329,9 @@ public class DataReaderImpl<T> implements DataReader<T> {
 	}
 
 	@Override
-	public StatusCondition<DataReader<T>> getStatusCondition() {
-		// TODO: Get triggered conditions
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Set<Class<? extends Status>> getStatusChanges() {
-		// TODO: Status changes
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public InstanceHandle lookupInstance(T keyHolder) {
 		// TODO: map to handle
 		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public DataReaderListener<T> getListener() {
-		return listener;
-	}
-
-	@Override
-	public void setListener(DataReaderListener<T> listener) {
-		setListener(listener, null);
-	}
-
-	@Override
-	public void setListener(DataReaderListener<T> listener, Collection<Class<? extends Status>> statuses) {
-		this.listener = listener;
-		this.listenerStatuses = statuses;
 	}
 
 	@Override
@@ -382,34 +340,12 @@ public class DataReaderImpl<T> implements DataReader<T> {
 	}
 
 	@Override
-	public DataReaderQos getQos() {
-		return qos;
-	}
-
-	@Override
-	public void setQos(DataReaderQos qos) {
-		this.qos = qos;
-	}
-
-	@Override
-	public void setQos(String qosLibraryName, String qosProfileName) {
-		QosProvider provider = getEnvironment().getSPI().newQosProvider(qosLibraryName, qosProfileName);
-		if (provider != null)
-			setQos(provider.getDataReaderQos());
-	}
-
-	@Override
-	public InstanceHandle getInstanceHandle() {
-		return handle;
-	}
-
-	@Override
 	public Subscriber getParent() {
 		return parent;
 	}
 
 	@Override
-	public ServiceEnvironment getEnvironment() {
-		return environment;
+	protected DataReaderQos fetchProviderQos(QosProvider provider) {
+		return provider.getDataReaderQos();
 	}
 }

@@ -9,7 +9,8 @@ import org.omg.dds.sub.DataReader;
 /**
  * DataAvailableEvent impl.
  *
- * @param <T> {@link DataReader} data type.
+ * @param <T>
+ *        {@link DataReader} data type.
  *
  * @author Matt Coley
  * @see DataAvailableEvent

@@ -42,7 +42,8 @@ public class DataStateImpl implements Subscriber.DataState {
 	 * @param instanceStates
 	 * 		Instance states to use.
 	 */
-	public DataStateImpl(ServiceEnvironment environment, Set<SampleState> sampleStates, Set<ViewState> viewStates, Set<InstanceState> instanceStates) {
+	public DataStateImpl(ServiceEnvironment environment, Set<SampleState> sampleStates, Set<ViewState> viewStates,
+						 Set<InstanceState> instanceStates) {
 		this.environment = environment;
 		this.sampleStates.addAll(sampleStates);
 		this.viewStates.addAll(viewStates);

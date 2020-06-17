@@ -47,7 +47,8 @@ public class OfferedDeadlineMissedEventImpl<T> extends OfferedDeadlineMissedEven
 
 	@Override
 	public OfferedDeadlineMissedEvent<T> clone() {
-		return new OfferedDeadlineMissedEventImpl<>(getEnvironment(), getSource(), new OfferedDeadlineMissedStatusImpl(getStatus()));
+		return new OfferedDeadlineMissedEventImpl<>(getEnvironment(), getSource(),
+				new OfferedDeadlineMissedStatusImpl(getStatus()));
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package me.coley.puredds.domain;
 
+import me.coley.puredds.core.EntityBase;
 import me.coley.puredds.core.datatype.ModifiableTimeImpl;
 import me.coley.puredds.core.datatype.TimeImpl;
 import me.coley.puredds.sub.SubscriberImpl;
@@ -38,28 +39,22 @@ import java.util.concurrent.TimeoutException;
  *
  * @author Matt Coley
  */
-public class DomainParticipantImpl implements DomainParticipant {
-	private final ServiceEnvironment environment;
-	private final InstanceHandle handle;
+public class DomainParticipantImpl
+		extends EntityBase<DomainParticipant, DomainParticipantListener, DomainParticipantQos>
+		implements DomainParticipant {
 	private final int domainId;
-	private boolean enabled;
-	// ignores
 	// TODO: Use these ignore items
 	private final Collection<InstanceHandle> ignoredParticipants = new HashSet<>();
 	private final Collection<InstanceHandle> ignoredTopics = new HashSet<>();
 	private final Collection<InstanceHandle> ignoredPublications = new HashSet<>();
 	private final Collection<InstanceHandle> ignoredSubscriptions = new HashSet<>();
-	// listener
-	private DomainParticipantListener listener; // TODO: Use this
-	private Collection<Class<? extends Status>> listenerStatuses;
-	// qos
-	private DomainParticipantQos qos;
-	private PublisherQos defaultPublisherQos;
-	private SubscriberQos defaultSubscriberQos;
-	private TopicQos defaultTopicQos;
 	private Set<InstanceHandle> discoveredTopics;
 	private Set<InstanceHandle> discoveredParticipants;
 	private Set<Subscriber> subscribers;
+	private PublisherQos defaultPublisherQos;
+	private SubscriberQos defaultSubscriberQos;
+	private TopicQos defaultTopicQos;
+
 
 	/**
 	 * Create the participant.
@@ -77,11 +72,34 @@ public class DomainParticipantImpl implements DomainParticipant {
 	 */
 	public DomainParticipantImpl(ServiceEnvironment environment, int domainId, DomainParticipantQos qos,
 								 DomainParticipantListener listener, Collection<Class<? extends Status>> statuses) {
-		this.environment = environment;
-		this.handle = environment.getSPI().newInstanceHandle();
+		super(environment);
 		this.domainId = domainId;
-		this.qos = qos;
+		setQos(qos);
 		setListener(listener, statuses);
+	}
+
+	@Override
+	public void assertLiveliness() {
+		// Essentially a keep-alive that is used when data is not being sent regularly enough to
+		// automatically be kept alive.
+		// ...
+		// or if the Liveliness-kind is MANUAL_BY_PARTICIPANT
+		// TODO: Assert
+	}
+
+	@Override
+	public void retain() {
+		// TODO: What do here?
+	}
+
+	@Override
+	public void close() {
+		// TODO: What do here?
+	}
+
+	@Override
+	public void closeContainedEntities() {
+		// TODO: Close entities
 	}
 
 	@Override
@@ -231,11 +249,6 @@ public class DomainParticipantImpl implements DomainParticipant {
 	}
 
 	@Override
-	public void closeContainedEntities() {
-		// TODO: Close entities
-	}
-
-	@Override
 	public void ignoreParticipant(InstanceHandle handle) {
 		ignoredParticipants.add(handle);
 	}
@@ -258,15 +271,6 @@ public class DomainParticipantImpl implements DomainParticipant {
 	@Override
 	public int getDomainId() {
 		return domainId;
-	}
-
-	@Override
-	public void assertLiveliness() {
-		// Essentially a keep-alive that is used when data is not being sent regularly enough to
-		// automatically be kept alive.
-		// ...
-		// or if the Liveliness-kind is MANUAL_BY_PARTICIPANT
-		// TODO: Assert
 	}
 
 	@Override
@@ -297,23 +301,6 @@ public class DomainParticipantImpl implements DomainParticipant {
 	@Override
 	public void setDefaultTopicQos(TopicQos qos) {
 		defaultTopicQos = qos;
-	}
-
-	@Override
-	public DomainParticipantQos getQos() {
-		return qos;
-	}
-
-	@Override
-	public void setQos(DomainParticipantQos qos) {
-		this.qos = qos;
-	}
-
-	@Override
-	public void setQos(String qosLibraryName, String qosProfileName) {
-		QosProvider provider = getEnvironment().getSPI().newQosProvider(qosLibraryName, qosProfileName);
-		if (provider != null)
-			setQos(provider.getDomainParticipantQos());
 	}
 
 	@Override
@@ -355,65 +342,7 @@ public class DomainParticipantImpl implements DomainParticipant {
 	}
 
 	@Override
-	public DomainParticipantListener getListener() {
-		return listener;
-	}
-
-	@Override
-	public void setListener(DomainParticipantListener listener) {
-		setListener(listener, null);
-	}
-
-	@Override
-	public void setListener(DomainParticipantListener listener, Collection<Class<? extends Status>> statuses) {
-		this.listener = listener;
-		this.listenerStatuses = statuses;
-	}
-
-	@Override
-	public StatusCondition<DomainParticipant> getStatusCondition() {
-		// TODO: Use as a getter for the "org.omg.dds.core.StatusCondition"
-		//  - Maybe have a sort of Environment-level "ConditionCache" that has a map of handles to conditions statuses
-		//    - This will allow easily adding all condition tracking logic to an interface and adding to all those that need it
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Set<Class<? extends Status>> getStatusChanges() {
-		// TODO: track statuses and see which change between each call of this method
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public InstanceHandle getInstanceHandle() {
-		return handle;
-	}
-
-	@Override
-	public ServiceEnvironment getEnvironment() {
-		return environment;
-	}
-
-	@Override
-	public void retain() {
-		// TODO: What do here?
-	}
-
-	@Override
-	public void close() {
-		// TODO: What do here?
-	}
-
-	@Override
-	public void enable() {
-		// TODO: Read the javadoc of enable and implemend behavior modifiers for enabled/disabled states
-		enabled = true;
-	}
-
-	/**
-	 * @return Active state of the participant.
-	 */
-	public boolean isEnabled() {
-		return enabled;
+	protected DomainParticipantQos fetchProviderQos(QosProvider provider) {
+		return provider.getDomainParticipantQos();
 	}
 }

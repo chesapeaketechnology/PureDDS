@@ -51,7 +51,8 @@ public class PolicyFactoryImpl extends PolicyFactory {
 	 */
 	public PolicyFactoryImpl(ServiceEnvironment environment) {
 		this.environment = environment;
-		defaultReliabilityBlockingMs = environment.getSPI().newDuration(getConfigurator(environment).getDefaultReliabilityBlockingMs(), TimeUnit.MILLISECONDS);
+		defaultReliabilityBlockingMs = environment.getSPI()
+				.newDuration(getConfigurator(environment).getDefaultReliabilityBlockingMs(), TimeUnit.MILLISECONDS);
 	}
 
 	@Override
