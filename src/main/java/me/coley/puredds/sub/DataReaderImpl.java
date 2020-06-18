@@ -1,7 +1,9 @@
 package me.coley.puredds.sub;
 
 import me.coley.puredds.core.EntityBase;
+import me.coley.puredds.core.handle.InstanceHandleImpl;
 import org.omg.dds.core.Duration;
+import org.omg.dds.core.Entity;
 import org.omg.dds.core.InstanceHandle;
 import org.omg.dds.core.ModifiableInstanceHandle;
 import org.omg.dds.core.QosProvider;
@@ -296,6 +298,7 @@ public class DataReaderImpl<T> extends EntityBase<DataReader<T>, DataReaderListe
 						.withAnyInstanceState()
 				));
 		// TODO: Copy read value into "sample"
+		//  - The interface is just getters... so what does it want???
 		return !read.isEmpty();
 	}
 
@@ -309,6 +312,7 @@ public class DataReaderImpl<T> extends EntityBase<DataReader<T>, DataReaderListe
 						.withAnyInstanceState()
 				));
 		// TODO: Copy take value into "sample"
+		//  - The interface is just getters... so what does it want???
 		return !take.isEmpty();
 	}
 
@@ -323,15 +327,22 @@ public class DataReaderImpl<T> extends EntityBase<DataReader<T>, DataReaderListe
 
 	@Override
 	public ModifiableInstanceHandle lookupInstance(ModifiableInstanceHandle handle, T keyHolder) {
-		// TODO: https://www.javadoc.io/static/org.omg.dds/java5-psm/1.0/org/omg/dds/sub/DataReader.html#lookupInstance(org.omg.dds.core.ModifiableInstanceHandle,%20TYPE)
-		//  - key-to-handle basically
-		return handle;
+		if (handle instanceof InstanceHandleImpl && keyHolder instanceof Entity) {
+			return ((InstanceHandleImpl) handle).withEntity((Entity<?, ?>) keyHolder);
+		} else {
+			// The spec says this needs to be a nil-handle, which should be an immutable handle to "null"...
+			// But the return type won't allow that, so we use a mutable handle that points to "null"...
+			return new InstanceHandleImpl(getEnvironment()).withEntity(null);
+		}
 	}
 
 	@Override
 	public InstanceHandle lookupInstance(T keyHolder) {
-		// TODO: map to handle
-		throw new UnsupportedOperationException();
+		if (keyHolder instanceof Entity) {
+			return ((Entity<?, ?>) keyHolder).getInstanceHandle();
+		} else {
+			return getEnvironment().getSPI().nilHandle();
+		}
 	}
 
 	@Override

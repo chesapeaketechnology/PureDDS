@@ -65,7 +65,7 @@ public class InstanceHandleImpl extends ModifiableInstanceHandle implements IEnt
 
 	@Override
 	public boolean isNil() {
-		return false;
+		return entity == null;
 	}
 
 	@Override

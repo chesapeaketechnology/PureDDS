@@ -16,7 +16,7 @@ import java.util.Set;
  * @param <EntityType>
  * 		Type of entity the condition belongs to.
  *
- * @author Matt Coley.
+ * @author Matt Coley
  */
 public class StatusConditionImpl<EntityType extends EntityBase<?, ?, ?>> implements StatusCondition<EntityType> {
 	private final ServiceEnvironment environment;
