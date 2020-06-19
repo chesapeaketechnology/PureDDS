@@ -231,12 +231,12 @@ public class DomainParticipantImpl
 	}
 
 	@Override
-	public <T> Topic<T> findTopic(String topicName, Duration timeout) throws TimeoutException {
-		return findTopic(topicName, timeout.getDuration(TimeUnit.NANOSECONDS), TimeUnit.NANOSECONDS);
+	public <T> Topic<T> findTopic(String topicName, long timeout, TimeUnit unit) throws TimeoutException {
+		return findTopic(topicName, getEnvironment().getSPI().newDuration(timeout, unit));
 	}
 
 	@Override
-	public <T> Topic<T> findTopic(String topicName, long timeout, TimeUnit unit) throws TimeoutException {
+	public <T> Topic<T> findTopic(String topicName, Duration timeout) throws TimeoutException {
 		// TODO: Find topic
 		throw new UnsupportedOperationException();
 	}
