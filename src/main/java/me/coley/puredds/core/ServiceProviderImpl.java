@@ -11,6 +11,7 @@ import me.coley.puredds.domain.DomainParticipantFactoryImpl;
 import me.coley.puredds.core.handle.ImmutableInstanceHandleImpl;
 import me.coley.puredds.core.handle.InstanceHandleImpl;
 import me.coley.puredds.core.policy.PolicyFactoryImpl;
+import me.coley.puredds.type.TypeSupportImpl;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.GuardCondition;
 import org.omg.dds.core.InstanceHandle;
@@ -63,13 +64,19 @@ public class ServiceProviderImpl implements ServiceEnvironment.ServiceProviderIn
 	@Override
 	public DynamicTypeFactory getTypeFactory() {
 		// TODO: Dynamic type support
+		//  - DOCS: Literally no idea how though, there is NO JAVADOCS AT ALL >:(
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public DynamicDataFactory getDynamicDataFactory() {
+		// TODO: Dynamic data factory
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public <T> TypeSupport<T> newTypeSupport(Class<T> type, String registeredName) {
-		// TODO: Normal type support
-		throw new UnsupportedOperationException();
+		return new TypeSupportImpl<>(getEnvironment(), type, registeredName);
 	}
 
 	@Override
@@ -138,12 +145,6 @@ public class ServiceProviderImpl implements ServiceEnvironment.ServiceProviderIn
 	@Override
 	public PolicyFactory getPolicyFactory() {
 		return policyFactory;
-	}
-
-	@Override
-	public DynamicDataFactory getDynamicDataFactory() {
-		// TODO: Dynamic data factory
-		throw new UnsupportedOperationException();
 	}
 
 	@Override
