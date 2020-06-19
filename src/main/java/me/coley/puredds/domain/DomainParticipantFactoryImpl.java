@@ -78,7 +78,9 @@ public class DomainParticipantFactoryImpl extends DomainParticipantFactory {
 											   Collection<Class<? extends Status>> statuses) {
 		return participantMap.computeIfAbsent(domainId, d -> {
 			DomainParticipant participant = new DomainParticipantImpl(getEnvironment(), d, qos, listener, statuses);
-			participant.enable();
+			if (qos.getEntityFactory().isAutoEnableCreatedEntities()) {
+				participant.enable();
+			}
 			return participant;
 		});
 	}

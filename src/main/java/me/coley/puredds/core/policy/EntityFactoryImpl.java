@@ -10,7 +10,7 @@ import org.omg.dds.core.policy.EntityFactory;
  * @see EntityFactory
  */
 public class EntityFactoryImpl extends AbstractPolicy implements EntityFactory {
-	private final boolean autoEnableCreatedEntities;
+	private boolean autoEnableCreatedEntities;
 
 	/**
 	 * @param environment
@@ -30,6 +30,7 @@ public class EntityFactoryImpl extends AbstractPolicy implements EntityFactory {
 
 	@Override
 	public EntityFactory withAutoEnableCreatedEntities(boolean autoEnableCreatedEntities) {
-		return new EntityFactoryImpl(getEnvironment(), autoEnableCreatedEntities);
+		this.autoEnableCreatedEntities = autoEnableCreatedEntities;
+		return this;
 	}
 }

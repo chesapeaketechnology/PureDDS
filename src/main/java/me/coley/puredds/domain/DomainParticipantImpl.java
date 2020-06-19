@@ -3,7 +3,10 @@ package me.coley.puredds.domain;
 import me.coley.puredds.core.EntityBase;
 import me.coley.puredds.core.datatype.ModifiableTimeImpl;
 import me.coley.puredds.core.datatype.TimeImpl;
+import me.coley.puredds.core.policy.UserDataImpl;
 import me.coley.puredds.sub.SubscriberImpl;
+import me.coley.puredds.topic.BuiltInTopicKeyImpl;
+import me.coley.puredds.topic.ParticipantBuiltinTopicDataImpl;
 import me.coley.puredds.topic.TopicImpl;
 import org.omg.dds.core.*;
 import org.omg.dds.core.status.Status;
@@ -28,8 +31,10 @@ import org.omg.dds.type.TypeSupport;
 import org.omg.dds.type.dynamic.DynamicType;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -48,8 +53,8 @@ public class DomainParticipantImpl
 	private final Collection<InstanceHandle> ignoredTopics = new HashSet<>();
 	private final Collection<InstanceHandle> ignoredPublications = new HashSet<>();
 	private final Collection<InstanceHandle> ignoredSubscriptions = new HashSet<>();
-	private Set<InstanceHandle> discoveredTopics;
-	private Set<InstanceHandle> discoveredParticipants;
+	private Map<InstanceHandle, Topic<?>> discoveredTopics;
+	private Map<InstanceHandle, Entity<?, ?>> discoveredParticipants;
 	private Set<Subscriber> subscribers;
 	private PublisherQos defaultPublisherQos;
 	private SubscriberQos defaultSubscriberQos;
@@ -115,16 +120,9 @@ public class DomainParticipantImpl
 	@Override
 	public Publisher createPublisher(PublisherQos qos, PublisherListener listener,
 									 Collection<Class<? extends Status>> statuses) {
+		doClosedCheck("Cannot create publisher, domain participant is closed");
 		// TODO: Publisher
-		//  - And record with entity handle
-
-		// Participant must not be closed
-		// - If closed, throw exception
-
-		// Participant must be enabled
-
-		// What is the difference between "closed" and "!enabled"?
-
+		//  - And record with entity handle (discoveredParticipants)
 		throw new UnsupportedOperationException();
 	}
 
@@ -141,8 +139,13 @@ public class DomainParticipantImpl
 	@Override
 	public Subscriber createSubscriber(SubscriberQos qos, SubscriberListener listener,
 									   Collection<Class<? extends Status>> statuses) {
+		doClosedCheck("Cannot create subscriber, domain participant is closed");
 		Subscriber subscriber = new SubscriberImpl(getEnvironment(), this, qos, listener, statuses);
 		subscribers.add(subscriber);
+		discoveredParticipants.put(subscriber.getInstanceHandle(), subscriber);
+		if (qos.getEntityFactory().isAutoEnableCreatedEntities()) {
+			subscriber.enable();
+		}
 		return subscriber;
 	}
 
@@ -160,9 +163,7 @@ public class DomainParticipantImpl
 	@Override
 	public <T> Topic<T> createTopic(String topicName, Class<T> type, TopicQos qos, TopicListener<T> listener,
 									Collection<Class<? extends Status>> statuses) {
-		Topic<T> topic = new TopicImpl<>(getEnvironment(), this, topicName, type, qos, listener, statuses);
-		discoveredTopics.add(topic.getInstanceHandle());
-		return topic;
+		return createTopic(topicName, TypeSupport.newTypeSupport(type, getEnvironment()), qos, listener, statuses);
 	}
 
 	@Override
@@ -173,8 +174,9 @@ public class DomainParticipantImpl
 	@Override
 	public <T> Topic<T> createTopic(String topicName, TypeSupport<T> type, TopicQos qos, TopicListener<T> listener,
 									Collection<Class<? extends Status>> statuses) {
+		doClosedCheck("Cannot create topic, domain participant is closed");
 		Topic<T> topic = new TopicImpl<>(getEnvironment(), this, topicName, type, qos, listener, statuses);
-		discoveredTopics.add(topic.getInstanceHandle());
+		discoveredTopics.put(topic.getInstanceHandle(), topic);
 		return topic;
 	}
 
@@ -187,9 +189,7 @@ public class DomainParticipantImpl
 	public Topic<DynamicType> createTopic(String topicName, DynamicType type, TopicQos qos,
 										  TopicListener<DynamicType> listener,
 										  Collection<Class<? extends Status>> statuses) {
-		// TODO: Create topic dynamic
-		//  - And record with entity handle
-		throw new UnsupportedOperationException();
+		return createTopic(topicName, type, null, qos, listener, statuses);
 	}
 
 	@Override
@@ -218,9 +218,8 @@ public class DomainParticipantImpl
 	@Override
 	public <T> MultiTopic<T> createMultiTopic(String name, Class<T> type, String subscriptionExpression,
 											  List<String> expressionParameters) {
-		// TODO Create topic: multi
-		//  - And record with entity handle
-		throw new UnsupportedOperationException();
+		return createMultiTopic(name, TypeSupport.newTypeSupport(type, getEnvironment()),
+				subscriptionExpression, expressionParameters);
 	}
 
 	@Override
@@ -305,30 +304,39 @@ public class DomainParticipantImpl
 
 	@Override
 	public Set<InstanceHandle> getDiscoveredParticipants() {
-		return discoveredParticipants;
+		return Collections.unmodifiableSet(discoveredParticipants.keySet());
 	}
 
 	@Override
 	public ParticipantBuiltinTopicData getDiscoveredParticipantData(InstanceHandle participantHandle) {
-		// TODO: Record discovered participants
 		throw new UnsupportedOperationException();
+		// if (discoveredParticipants.containsKey(participantHandle)) {
+		//  TODO: Store this info somewhere after reading it in so we can fetch it here
+		// 	int[] keyValue = new int[4];
+		// 	int[] dataValue = new int[4];
+		// 	return new ParticipantBuiltinTopicDataImpl(getEnvironment(),
+		// 			new BuiltInTopicKeyImpl(getEnvironment(), keyValue),
+		// 			new UserDataImpl(getEnvironment(), dataValue));
+		// }
+		// // DOCS: Return null? Throw exception?
+		// return null;
 	}
 
 	@Override
 	public Set<InstanceHandle> getDiscoveredTopics() {
-		return discoveredTopics;
+		return Collections.unmodifiableSet(discoveredTopics.keySet());
 	}
 
 	@Override
 	public TopicBuiltinTopicData getDiscoveredTopicData(InstanceHandle topicHandle) {
 		// TODO: Record discovered topics
+		//  - Store this info somewhere after reading it in so we can fetch it here
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean containsEntity(InstanceHandle handle) {
-		// TODO: Record discovered entities
-		throw new UnsupportedOperationException();
+		return discoveredParticipants.containsKey(handle) || discoveredTopics.containsKey(handle);
 	}
 
 	@Override

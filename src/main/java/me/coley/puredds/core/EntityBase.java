@@ -206,6 +206,18 @@ public abstract class EntityBase<E extends Entity<L, Q>, L extends EventListener
 	}
 
 	/**
+	 * Check if the entity is closed. If it is, throw an exception with the given message.
+	 *
+	 * @param message
+	 * 		Exception message when entity is closed.
+	 */
+	protected void doClosedCheck(String message) {
+		if (isClosed()) {
+			throw new IllegalStateException(message);
+		}
+	}
+
+	/**
 	 * @param status
 	 * 		Status implementation instance.
 	 *
