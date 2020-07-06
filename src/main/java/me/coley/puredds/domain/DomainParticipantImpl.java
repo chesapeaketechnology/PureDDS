@@ -3,12 +3,15 @@ package me.coley.puredds.domain;
 import me.coley.puredds.core.EntityBase;
 import me.coley.puredds.core.datatype.ModifiableTimeImpl;
 import me.coley.puredds.core.datatype.TimeImpl;
-import me.coley.puredds.core.policy.UserDataImpl;
 import me.coley.puredds.sub.SubscriberImpl;
-import me.coley.puredds.topic.BuiltInTopicKeyImpl;
-import me.coley.puredds.topic.ParticipantBuiltinTopicDataImpl;
 import me.coley.puredds.topic.TopicImpl;
-import org.omg.dds.core.*;
+import org.omg.dds.core.Duration;
+import org.omg.dds.core.Entity;
+import org.omg.dds.core.InstanceHandle;
+import org.omg.dds.core.ModifiableTime;
+import org.omg.dds.core.QosProvider;
+import org.omg.dds.core.ServiceEnvironment;
+import org.omg.dds.core.Time;
 import org.omg.dds.core.status.Status;
 import org.omg.dds.domain.DomainParticipant;
 import org.omg.dds.domain.DomainParticipantListener;
@@ -176,6 +179,9 @@ public class DomainParticipantImpl
 									Collection<Class<? extends Status>> statuses) {
 		doClosedCheck("Cannot create topic, domain participant is closed");
 		Topic<T> topic = new TopicImpl<>(getEnvironment(), this, topicName, type, qos, listener, statuses);
+		if (qos.getPolicyFactory().EntityFactory().isAutoEnableCreatedEntities()) {
+			topic.enable();
+		}
 		discoveredTopics.put(topic.getInstanceHandle(), topic);
 		return topic;
 	}
