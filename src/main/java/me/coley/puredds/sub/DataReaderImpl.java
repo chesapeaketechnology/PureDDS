@@ -2,6 +2,13 @@ package me.coley.puredds.sub;
 
 import me.coley.puredds.core.EntityBase;
 import me.coley.puredds.core.handle.InstanceHandleImpl;
+import me.coley.puredds.core.status.DataAvailableStatusImpl;
+import me.coley.puredds.core.status.LivelinessChangedStatusImpl;
+import me.coley.puredds.core.status.RequestedDeadlineMissedStatusImpl;
+import me.coley.puredds.core.status.RequestedIncompatibleQosStatusImpl;
+import me.coley.puredds.core.status.SampleLostStatusImpl;
+import me.coley.puredds.core.status.SampleRejectedStatusImpl;
+import me.coley.puredds.core.status.SubscriptionMatchedStatusImpl;
 import org.omg.dds.core.Duration;
 import org.omg.dds.core.Entity;
 import org.omg.dds.core.InstanceHandle;
@@ -57,9 +64,9 @@ public class DataReaderImpl<T> extends EntityBase<DataReader<T>, DataReaderListe
 	 * @param qos
 	 * 		Quality of service of the reader.
 	 * @param listener
-	 * 		TODO: Describe
+	 * 		Optional reader listener.
 	 * @param listenerStatuses
-	 * 		TODO: Describe
+	 * 		Status filter mask for the listener.
 	 */
 	public DataReaderImpl(ServiceEnvironment environment, Subscriber parent, TopicDescription<T> topic,
 						  DataReaderQos qos, DataReaderListener<T> listener,
@@ -69,6 +76,19 @@ public class DataReaderImpl<T> extends EntityBase<DataReader<T>, DataReaderListe
 		this.topic = topic;
 		setQos(qos);
 		setListener(listener, listenerStatuses);
+	}
+
+	@Override
+	protected void addInitialStatuses() {
+		// TODO: Should consider non-null default values for some of these?
+		registerStatus(new DataAvailableStatusImpl(getEnvironment()));
+		registerStatus(new SampleLostStatusImpl(getEnvironment(), 0, 0));
+		registerStatus(new RequestedDeadlineMissedStatusImpl(getEnvironment(), 0, 0, null));
+		registerStatus(new RequestedIncompatibleQosStatusImpl(getEnvironment(), 0, 0, null, null));
+		registerStatus(new LivelinessChangedStatusImpl(getEnvironment(), 0, 0, 0, 0, null));
+		registerStatus(new SubscriptionMatchedStatusImpl(getEnvironment(), 0, 0, 0, 0, null));
+		registerStatus(new SampleRejectedStatusImpl(getEnvironment(), 0, 0,
+				SampleRejectedStatus.Kind.NOT_REJECTED, null));
 	}
 
 	@Override
@@ -98,6 +118,8 @@ public class DataReaderImpl<T> extends EntityBase<DataReader<T>, DataReaderListe
 
 	@Override
 	public Selector<T> select() {
+		// TODO: Investigate enforcing defined constraints wherever this is used:
+		//  - https://www.javadoc.io/static/org.omg.dds/java5-psm/1.0/org/omg/dds/sub/DataReader.html#take(org.omg.dds.sub.DataReader.Selector)
 		return new SelectorImpl<>(getEnvironment(), this);
 	}
 
@@ -128,9 +150,7 @@ public class DataReaderImpl<T> extends EntityBase<DataReader<T>, DataReaderListe
 		//  - Total samples rejected
 		//  - Samples rejected since last query
 		//  - Most recent rejection reason
-		throw new UnsupportedOperationException();
-		// return new SampleRejectedStatusImpl(getEnvironment(),
-		// 		rejectedTotal, rejectedDx, lastRejectionReason, getInstanceHandle());
+		return getStatus(SampleRejectedStatus.class);
 	}
 
 	@Override
@@ -139,9 +159,7 @@ public class DataReaderImpl<T> extends EntityBase<DataReader<T>, DataReaderListe
 		//  - Current number of alive writers on the topic this reads from
 		//  - Current number of dead writers on the topic this reads from
 		//  - differences in these numbers from the last query
-		throw new UnsupportedOperationException();
-		// return new LivelinessChangedStatusImpl(getEnvironment(), aliveCount, deadCount,
-		// 		aliveCountDx, deadCountDx, getInstanceHandle());
+		return getStatus(LivelinessChangedStatus.class);
 	}
 
 	@Override
@@ -149,9 +167,7 @@ public class DataReaderImpl<T> extends EntityBase<DataReader<T>, DataReaderListe
 		// TODO: Track this info
 		//  - Total number of missed deadlines
 		//  - Difference from last query
-		throw new UnsupportedOperationException();
-		// return new RequestedDeadlineMissedStatusImpl(getEnvironment(),
-		// 		missedDeadlines, missedDeadlinesDx, getInstanceHandle());
+		return getStatus(RequestedDeadlineMissedStatus.class);
 	}
 
 	@Override
@@ -161,9 +177,7 @@ public class DataReaderImpl<T> extends EntityBase<DataReader<T>, DataReaderListe
 		//  - Difference in number from last query
 		//  - Last policy that was incompatible
 		//  - Set of policy counts to summarize all total-incompatibilities for all policies
-		throw new UnsupportedOperationException();
-		// return new RequestedIncompatibleQosStatusImpl(getEnvironment(),
-		// 		incompatibleCount, incompatibleDx, lastIncompatiblePolicy, incompatiblePoliciesCounts);
+		return getStatus(RequestedIncompatibleQosStatus.class);
 	}
 
 	@Override
@@ -173,9 +187,7 @@ public class DataReaderImpl<T> extends EntityBase<DataReader<T>, DataReaderListe
 		//  - Difference in number from last query
 		//  - Current number of reader/writer compatibility matches
 		//  - Difference in number from last query
-		throw new UnsupportedOperationException();
-		// return new SubscriptionMatchedStatusImpl(getEnvironment(),
-		// 		compatibleCount, compatibleCountDx, compatibleCurrent, compatibleCurrentDx, getInstanceHandle());
+		return getStatus(SubscriptionMatchedStatus.class);
 	}
 
 	@Override
@@ -183,8 +195,7 @@ public class DataReaderImpl<T> extends EntityBase<DataReader<T>, DataReaderListe
 		// TODO: Track this info
 		//  - Lost samples across ALL instances (so it should be static?)
 		//  - Difference from last query
-		throw new UnsupportedOperationException();
-		// return new SampleLostStatusImpl(getEnvironment(), lostCount, lostCountDx);
+		return getStatus(SampleLostStatus.class);
 	}
 
 	@Override
@@ -216,74 +227,62 @@ public class DataReaderImpl<T> extends EntityBase<DataReader<T>, DataReaderListe
 
 	@Override
 	public Sample.Iterator<T> read() {
-		// TODO: Unconstrained read operation
-		throw new UnsupportedOperationException();
+		return read(select());
 	}
 
 	@Override
 	public Sample.Iterator<T> read(int maxSamples) {
-		// TODO: Unconstrained read operation, limiting to a maximum amount of samples
-		throw new UnsupportedOperationException();
+		return read(select().maxSamples(maxSamples));
 	}
 
 	@Override
 	public Sample.Iterator<T> read(Selector<T> query) {
-		// TODO: Selector constrained read operation
-		//  - https://www.javadoc.io/static/org.omg.dds/java5-psm/1.0/org/omg/dds/sub/DataReader.html#read(org.omg.dds.sub.DataReader.Selector)
-		throw new UnsupportedOperationException();
+		return new SampleIteratorImpl<>(read(new ArrayList<>(), query));
 	}
 
 	@Override
 	public List<Sample<T>> read(List<Sample<T>> samples) {
-		// TODO: Unconstrained read operation
-		//  - Samples are not "loaned" but deep copied into the list
-		//  - if (samples read < list.size(), the list will be trimmed to fit the samples read
-		//  - if (list == null), the list size will be unbounded
-		//  - if (samples read == 0), the list will be empty
-		throw new UnsupportedOperationException();
-		// return samples;
+		return read(samples, select());
 	}
 
 	@Override
 	public List<Sample<T>> read(List<Sample<T>> samples, Selector<T> selector) {
-		// TODO: See above, but constrained
+		// TODO: Read operation
+		//  - Samples are not "loaned" but deep copied into the list
+		//  - if (samples read < list.size(), the list will be trimmed to fit the samples read
+		//  - if (list == null), the list size will be unbounded
+		//  - if (samples read == 0), the list will be empty
 		throw new UnsupportedOperationException();
 		// return samples;
 	}
 
 	@Override
 	public Sample.Iterator<T> take() {
-		// TODO: Unconstrained take operation
-		throw new UnsupportedOperationException();
+		return new SampleIteratorImpl<>(take(new ArrayList<>()));
 	}
 
 	@Override
 	public Sample.Iterator<T> take(int maxSamples) {
-		// TODO: Unconstrained take operation, limiting to a maximum amount of samples
-		throw new UnsupportedOperationException();
+		return new SampleIteratorImpl<>(take(new ArrayList<>(), select().maxSamples(maxSamples)));
 	}
 
 	@Override
 	public Sample.Iterator<T> take(Selector<T> query) {
-		// TODO: Constrained take operation
-		//  - https://www.javadoc.io/static/org.omg.dds/java5-psm/1.0/org/omg/dds/sub/DataReader.html#take(org.omg.dds.sub.DataReader.Selector)
-		throw new UnsupportedOperationException();
+		return new SampleIteratorImpl<>(take(new ArrayList<>(), query));
 	}
 
 	@Override
 	public List<Sample<T>> take(List<Sample<T>> samples) {
-		// TODO: Unconstrained take operation
-		//  - Samples are not "loaned" but deep copied into the list
-		//  - if (samples read < list.size(), the list will be trimmed to fit the samples read
-		//  - if (list == null), the list size will be unbounded
-		//  - if (samples read == 0), the list will be empty
-		throw new UnsupportedOperationException();
-		// return samples;
+		return take(samples, select());
 	}
 
 	@Override
 	public List<Sample<T>> take(List<Sample<T>> samples, Selector<T> query) {
-		// TODO: See above, but constrained
+		// TODO: Take operation
+		//  - Samples are not "loaned" but deep copied into the list
+		//  - if (samples read < list.size(), the list will be trimmed to fit the samples read
+		//  - if (list == null), the list size will be unbounded
+		//  - if (samples read == 0), the list will be empty
 		throw new UnsupportedOperationException();
 		// return samples;
 	}
@@ -298,7 +297,7 @@ public class DataReaderImpl<T> extends EntityBase<DataReader<T>, DataReaderListe
 						.withAnyInstanceState()
 				));
 		// TODO: Copy read value into "sample"
-		//  - The interface is just getters... so what does it want???
+		//  - What is the point if we're not caching this anywhere to use?
 		return !read.isEmpty();
 	}
 
@@ -312,7 +311,7 @@ public class DataReaderImpl<T> extends EntityBase<DataReader<T>, DataReaderListe
 						.withAnyInstanceState()
 				));
 		// TODO: Copy take value into "sample"
-		//  - The interface is just getters... so what does it want???
+		//  - What is the point if we're not caching this anywhere to use?
 		return !take.isEmpty();
 	}
 

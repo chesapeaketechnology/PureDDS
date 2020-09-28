@@ -1,6 +1,7 @@
 package me.coley.puredds.core;
 
 import me.coley.puredds.core.condition.StatusConditionImpl;
+import me.coley.puredds.util.AlreadyClosedException;
 import org.omg.dds.core.Entity;
 import org.omg.dds.core.EntityQos;
 import org.omg.dds.core.InstanceHandle;
@@ -39,7 +40,7 @@ public abstract class EntityBase<E extends Entity<L, Q>, L extends EventListener
 	private final Set<Class<? extends Status>> inactiveStatuses = new HashSet<>();
 	private final Set<Class<? extends Status>> dirtyStatuses = new HashSet<>();
 	private Q qos;
-	// TODO: Use listener
+	// TODO: Update/call listener
 	private L listener;
 	private Collection<Class<? extends Status>> listenerStatuses;
 	// TODO: Use enabled/closed states
@@ -53,7 +54,13 @@ public abstract class EntityBase<E extends Entity<L, Q>, L extends EventListener
 	public EntityBase(ServiceEnvironment environment) {
 		this.environment = environment;
 		this.handle = environment.getSPI().newInstanceHandle();
+		addInitialStatuses();
 	}
+
+	/**
+	 * {@link #registerStatus(Status) Registers} initial status values on initialization.
+	 */
+	protected abstract void addInitialStatuses();
 
 	/**
 	 * @param provider
@@ -75,17 +82,16 @@ public abstract class EntityBase<E extends Entity<L, Q>, L extends EventListener
 	}
 
 	/**
-	 * @param matchingState
-	 * 		Active state to filter by.
+	 * @param key
+	 * 		Status class key. Uses the {@code org.omg.dds.core.status} classes.
+	 * @param <S>
+	 * 		Type of status class.
 	 *
-	 * @return All statuses matching the given state.
+	 * @return Status instance of the given DDS type
 	 */
-	public Collection<? extends Status> getStatuses(boolean matchingState) {
-		if (matchingState) {
-			return activeStatuses.stream().map(statusMap::get).collect(Collectors.toSet());
-		} else {
-			return inactiveStatuses.stream().map(statusMap::get).collect(Collectors.toSet());
-		}
+	@SuppressWarnings("unchecked")
+	public <S extends Status> S getStatus(Class<S> key) {
+		return (S) statusMap.get(key);
 	}
 
 	/**
@@ -98,6 +104,20 @@ public abstract class EntityBase<E extends Entity<L, Q>, L extends EventListener
 		Class<? extends Status> key = getStatusClass(status);
 		statusMap.put(key, status);
 		inactiveStatuses.add(key);
+	}
+
+	/**
+	 * @param matchingState
+	 * 		Active state to filter by.
+	 *
+	 * @return All statuses matching the given state.
+	 */
+	public Collection<? extends Status> getStatusesOfState(boolean matchingState) {
+		if (matchingState) {
+			return activeStatuses.stream().map(statusMap::get).collect(Collectors.toSet());
+		} else {
+			return inactiveStatuses.stream().map(statusMap::get).collect(Collectors.toSet());
+		}
 	}
 
 	/**
@@ -213,7 +233,7 @@ public abstract class EntityBase<E extends Entity<L, Q>, L extends EventListener
 	 */
 	protected void doClosedCheck(String message) {
 		if (isClosed()) {
-			throw new IllegalStateException(message);
+			throw new AlreadyClosedException(getEnvironment(), message);
 		}
 	}
 
@@ -235,6 +255,8 @@ public abstract class EntityBase<E extends Entity<L, Q>, L extends EventListener
 	 */
 	@SuppressWarnings("unchecked")
 	public static Class<? extends Status> getStatusClass(Class<? extends Status> cls) {
+		// Check if the given class is not in the specs package.
+		// Probably an impl then, and the parent type is the status.
 		while (!cls.getName().startsWith("org.omg.dds.core.status"))
 			cls = (Class<? extends Status>) cls.getSuperclass();
 		return cls;

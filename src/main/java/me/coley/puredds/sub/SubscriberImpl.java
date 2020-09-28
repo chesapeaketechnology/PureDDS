@@ -39,9 +39,9 @@ public class SubscriberImpl extends EntityBase<Subscriber, SubscriberListener, S
 	 * @param qos
 	 * 		Quality of service for the subscriber.
 	 * @param listener
-	 * 		TODO: Describe
+	 * 		Optional subscriber listener.
 	 * @param listenerStatuses
-	 * 		TODO: Describe
+	 * 		Status filter mask for the listener.
 	 */
 	public SubscriberImpl(ServiceEnvironment environment, DomainParticipantImpl parent, SubscriberQos qos,
 						  SubscriberListener listener, Collection<Class<? extends Status>> listenerStatuses) {
@@ -49,6 +49,11 @@ public class SubscriberImpl extends EntityBase<Subscriber, SubscriberListener, S
 		this.parent = parent;
 		setQos(qos);
 		setListener(listener, listenerStatuses);
+	}
+
+	@Override
+	protected void addInitialStatuses() {
+		// No status for this type
 	}
 
 	@Override

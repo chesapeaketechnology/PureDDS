@@ -1,6 +1,7 @@
 package me.coley.puredds.topic;
 
 import me.coley.puredds.core.EntityBase;
+import me.coley.puredds.core.status.InconsistentTopicStatusImpl;
 import org.omg.dds.core.QosProvider;
 import org.omg.dds.core.ServiceEnvironment;
 import org.omg.dds.core.status.InconsistentTopicStatus;
@@ -60,7 +61,7 @@ public class TopicImpl<T> extends EntityBase<Topic<T>, TopicListener<T>, TopicQo
 	 * @param qos
 	 * 		Quality of service for the topic.
 	 * @param listener
-	 * 		Topic listener.
+	 * 		Optional topic listener.
 	 * @param statuses
 	 * 		Status filter mask for the listener.
 	 */
@@ -72,6 +73,11 @@ public class TopicImpl<T> extends EntityBase<Topic<T>, TopicListener<T>, TopicQo
 		this.type = type;
 		setQos(qos);
 		setListener(listener, statuses);
+	}
+
+	@Override
+	protected void addInitialStatuses() {
+		registerStatus(new InconsistentTopicStatusImpl(getEnvironment(), 0, 0));
 	}
 
 	@Override
@@ -91,12 +97,15 @@ public class TopicImpl<T> extends EntityBase<Topic<T>, TopicListener<T>, TopicQo
 		//  - If action done on closed topic, must throw "AlreadyClosedException"
 		//  - When there are readers/writers
 		//    - Fail if they are still active
+		//  - Remove topic from parent
 	}
 
 	@Override
 	public InconsistentTopicStatus getInconsistentTopicStatus() {
-		// TODO: What to do here?
-		throw new UnsupportedOperationException();
+		// TODO: Track this info
+		//  - Total discovered topics
+		//  - Difference of discovered count from last check
+		return getStatus(InconsistentTopicStatus.class);
 	}
 
 	@Override

@@ -13,15 +13,15 @@ import java.util.Set;
 /**
  * StatusCondition impl.
  *
- * @param <EntityType>
+ * @param <E>
  * 		Type of entity the condition belongs to.
  *
  * @author Matt Coley
  */
-public class StatusConditionImpl<EntityType extends EntityBase<?, ?, ?>> implements StatusCondition<EntityType> {
-	private final ServiceEnvironment environment;
-	private final EntityType entity;
+public class StatusConditionImpl<E extends EntityBase<?, ?, ?>> implements StatusCondition<E> {
 	private final Set<Class<? extends Status>> enabledStatuses = new HashSet<>();
+	private final ServiceEnvironment environment;
+	private final E entity;
 
 	/**
 	 * @param environment
@@ -29,7 +29,7 @@ public class StatusConditionImpl<EntityType extends EntityBase<?, ?, ?>> impleme
 	 * @param entity
 	 * 		Entity with conditions.
 	 */
-	public StatusConditionImpl(ServiceEnvironment environment, EntityType entity) {
+	public StatusConditionImpl(ServiceEnvironment environment, E entity) {
 		this.environment = environment;
 		this.entity = entity;
 	}
@@ -37,7 +37,7 @@ public class StatusConditionImpl<EntityType extends EntityBase<?, ?, ?>> impleme
 	@Override
 	public boolean getTriggerValue() {
 		// Iterate over all statuses
-		for (Status status : entity.getStatuses(true)) {
+		for (Status status : entity.getStatusesOfState(true)) {
 			Class<? extends Status> key = EntityBase.getStatusClass(status);
 			// Skip statuses that the condition is not sensitive to.
 			if (!enabledStatuses.contains(key)) {
@@ -62,7 +62,7 @@ public class StatusConditionImpl<EntityType extends EntityBase<?, ?, ?>> impleme
 	}
 
 	@Override
-	public EntityType getParent() {
+	public E getParent() {
 		return entity;
 	}
 

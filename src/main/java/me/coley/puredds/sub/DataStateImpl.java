@@ -31,7 +31,7 @@ public class DataStateImpl implements Subscriber.DataState {
 	}
 
 	/**
-	 * Create
+	 * Create data state.
 	 *
 	 * @param environment
 	 * 		Environment context.

@@ -87,6 +87,11 @@ public class DomainParticipantImpl
 	}
 
 	@Override
+	protected void addInitialStatuses() {
+		// No status for this type
+	}
+
+	@Override
 	public void assertLiveliness() {
 		// Essentially a keep-alive that is used when data is not being sent regularly enough to
 		// automatically be kept alive.
